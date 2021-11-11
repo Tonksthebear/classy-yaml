@@ -26,7 +26,7 @@ btn:
 Now, calling `yass(btn: :blue)` or `yass(btn: :yellow)` will ALSO pull in the classes from `btn: :base`.
 
 
-# ViewComponent
+### ViewComponent
 There is a special helper built for ViewComponent and sidecar assets. In your `example_component.rb`, add the line `include Classy::Yaml::ComponentHelpers`. This helper will tell `yass` to check if there is a `example_component.yml` file, and first use that for definitions. If the definitions aren't found in the `example_component.yml`, then it will fallback to `config/utility_classes.yml`.
 
 So, it may look like this

@@ -1,8 +1,9 @@
 require "classy/yaml/version"
-require "classy/yaml/railtie"
+require "classy/yaml/engine"
 
 module Classy
   module Yaml
-    # Your code goes here...
+    autoload :Helpers, "classy/yaml/helpers"
+    autoload :ComponentHelpers, "classy/yaml/component_helpers"
   end
 end

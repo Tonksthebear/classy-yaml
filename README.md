@@ -2,7 +2,7 @@
 This was created to provide convenient utility class grouping for environments without a bundler (or any situation where you might not want to add custom css classes). YAML files are a perfect structure for these situations.
 
 ## Usage
-After installing the gem, the helper method `yass` will be available from anywhere. It look for the definitions in the yaml file `config/utility_classes.yml` (note: you must add this yourself).
+After installing the gem, the helper method `yass` will be available from anywhere. It looks for the definitions in the yaml file `config/utility_classes.yml` (note: you must add this yourself).
 
 The YAML structure should follow this format:
 

@@ -1,0 +1,9 @@
+single: "single-class"
+
+nested_no_base:
+  nested: "nested-no-base-class"
+  nested2: "nested2-class"
+
+nested_base:
+  base: "nested-base-class"
+  nested: "nested-class"

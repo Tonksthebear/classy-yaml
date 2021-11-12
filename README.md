@@ -2,7 +2,7 @@
 This was created to provide convenient utility class grouping for environments without a bundler (or any situation where you might not want to add custom css classes). YAML files are a perfect structure for these situations.
 
 ## Usage
-After installing the gem, the helper method `yass` will be available from anywhere. It looks for the definitions in the yaml file `config/utility_classes.yml` (note: you must add this yourself).
+After installing the gem, the helper method `yass` will be available from anywhere. It looks for the definitions in the YAML file `config/utility_classes.yml` (note: you must add this yourself).
 
 The YAML structure should follow this format:
 
@@ -51,7 +51,8 @@ btn:
 # will add the classes "px-3 py-2 text-purple-200 bg-blue-500"
 ```
 
-As you can see, this will merge definitions found in the ExampleComponent's sidecar asset with the main application's definitions. Not only will it merge, but it will overwrite them as well, allowing for true customization on a per-component basis:
+As you can see, this will merge definitions found in the `ExampleComponent`'s sidecar asset with the main application's definitions. Not only will it merge, but it will overwrite them as well, allowing for true customization on a per-component basis:
+
 ```
 # config/utility_classes.yml
 btn:
@@ -72,7 +73,6 @@ btn:
 # will add the classes "px-3 py-2 text-blue-50"
 ```
 
-
 ## Installation
 Add this line to your application's Gemfile:
 
@@ -91,7 +91,7 @@ $ gem install classy-yaml
 ```
 
 ## Contributing
-This is my first attempt at an actual gem usable for all. Any and all suggestions are absolutely welcome. I'm not the cleanest programmer, so code quality suggestions are welcome too 👍 I extracted this logic from my private work and I felt it was useful enought to be worth publishing
+This is my first attempt at an actual gem usable for all. Any and all suggestions are absolutely welcome. I'm not the cleanest programmer, so code quality suggestions are welcome too 👍 I extracted this logic from my private work and I felt it was useful enought to be worth publishing.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

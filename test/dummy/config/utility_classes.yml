@@ -7,3 +7,14 @@ nested_no_base:
 nested_base:
   base: "nested-base-class"
   nested: "nested-class"
+
+overrideable: "override-class"
+
+overrideable_nested:
+  base: "overrideable-nested-base-class"
+  nested: "overrideable-nested-class"
+  nested2: "overrideable-nested2-class"
+
+overrideable_no_base_nested:
+  base: "overrideable-no-base-class"
+  nested: "overrideable-no-base-nested-class"

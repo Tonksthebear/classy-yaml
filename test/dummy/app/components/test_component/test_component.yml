@@ -1,0 +1,9 @@
+overrideable: "component-class"
+
+overrideable_nested:
+  base: "component-nested-base-class"
+  nested: "component-nested-class"
+  nested2: "component-nested2-class"
+
+overrideable_no_base_nested:
+  nested: "component-no-base-nested-class"

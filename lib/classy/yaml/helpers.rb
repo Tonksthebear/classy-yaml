@@ -57,18 +57,26 @@ module Classy
           fetched_classes = nil
 
           classy_yamls.reverse_each do |classy_yaml|
-            base_classes ||= if classy_yaml.send(:dig, *key).is_a?(Hash)
-                               classy_yaml.send(:dig, *(key + ['base'])).try(:split, " ")
-                             else
-                               classy_yaml.send(:dig, *(key[0...-1] + ['base'])).try(:split, " ")
-                             end
+            begin
+              base_classes ||= if classy_yaml.send(:dig, *key).is_a?(Hash)
+                                 classy_yaml.send(:dig, *(key + ['base'])).try(:split, " ")
+                               else
+                                 classy_yaml.send(:dig, *(key[0...-1] + ['base'])).try(:split, " ")
+                               end
+            rescue
+              raise Classy::Yaml::InvalidKeyError.new(data: key)
+            end
 
-            fetched_classes ||= unless classy_yaml.send(:dig, *key).is_a?(Hash)
-                                  classy_yaml.send(:dig, *key).try(:split, " ")
-                                end
+            begin
+              fetched_classes ||= unless classy_yaml.send(:dig, *key).is_a?(Hash)
+                                    classy_yaml.send(:dig, *key).try(:split, " ")
+                                  end
 
-            base_classes = nil if base_classes.blank?
-            fetched_classes = nil if fetched_classes.blank?
+              base_classes = nil if base_classes.blank?
+              fetched_classes = nil if fetched_classes.blank?
+            rescue
+              raise Classy::Yaml::InvalidKeyError.new(data: key)
+            end
           end
 
           classes << base_classes

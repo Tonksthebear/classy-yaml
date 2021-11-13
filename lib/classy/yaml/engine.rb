@@ -5,6 +5,10 @@ module Classy
       config.to_prepare do
         ApplicationController.helper(Classy::Yaml::Helpers)
       end
+
+      Gem.loaded_specs['classy-yaml'].dependencies.each do |d|
+        require d.name if Rails.env.test?
+      end
     end
   end
 end

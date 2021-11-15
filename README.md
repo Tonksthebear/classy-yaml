@@ -90,6 +90,13 @@ Or install it yourself as:
 $ gem install classy-yaml
 ```
 
+If using purging for styles, be sure to add the YAML files to the purge directories. For example, below is a tailwind.config.js:
+```
+purge: [
+   "./config/utility_classes.yml",
+   "./app/components/**/*.yml" // If using component sidecar assets
+]
+```
 ## Contributing
 This is my first attempt at an actual gem usable for all. Any and all suggestions are absolutely welcome. I'm not the cleanest programmer, so code quality suggestions are welcome too 👍 I extracted this logic from my private work and I felt it was useful enought to be worth publishing.
 

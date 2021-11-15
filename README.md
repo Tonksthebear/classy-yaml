@@ -94,7 +94,7 @@ If using purging for styles, be sure to add the YAML files to the purge director
 ```
 purge: [
    "./config/utility_classes.yml",
-   "./app/components/**/*.yml" // If using component sidecar assets
+   "./app/components/**/*.yml" // If using view component sidecar assets
 ]
 ```
 ## Contributing

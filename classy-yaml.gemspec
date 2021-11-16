@@ -26,5 +26,4 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "view_component", ">= 2.4"
   spec.add_development_dependency "capybara", ">= 3.36"
-  spec.add_development_dependency "rake"
 end

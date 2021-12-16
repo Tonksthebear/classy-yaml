@@ -4,7 +4,7 @@ module Classy
       def yass(*args)
         component_name = caller.first.split("/").last.split(".").first
         calling_path = caller.first.split("/")[0...-1].join("/")
-        classy_file = if Dir.exists?("#{calling_path}/#{component_name}")
+        classy_file = if Dir.exist?("#{calling_path}/#{component_name}")
                         "#{calling_path}/#{component_name}/#{component_name}.yml"
                       else
                         "#{calling_path}/#{component_name}.yml"

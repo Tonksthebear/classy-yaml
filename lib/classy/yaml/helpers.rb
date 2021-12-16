@@ -3,12 +3,12 @@ module Classy
     module Helpers
       def yass(*args)
         classy_yamls = []
-        classy_yamls << YAML.load_file(Rails.root.join("config/utility_classes.yml")) if File.exists?(Rails.root.join("config/utility_classes.yml"))
+        classy_yamls << YAML.load_file(Rails.root.join("config/utility_classes.yml")) if File.exist?(Rails.root.join("config/utility_classes.yml"))
 
         classy_files_hash = args.find { |arg| arg.is_a?(Hash) && arg.keys.include?(:classy_files) }
         if classy_files_hash.present?
           classy_files_hash[:classy_files].each do |file|
-            if File.exists?(file) && YAML.load_file(file)
+            if File.exist?(file) && YAML.load_file(file)
               file = YAML.load_file(file)
               classy_yamls << file if file
             end

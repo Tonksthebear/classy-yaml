@@ -46,7 +46,7 @@ btn:
 
 # app/components/example_component/example_component.html.erb
 
-<button class="<%=sass(btn: :purple)%>">Classy Button</button>
+<button class="<%=yass(btn: :purple)%>">Classy Button</button>
 
 # will add the classes "px-3 py-2 text-purple-200 bg-blue-500"
 ```
@@ -68,7 +68,7 @@ btn:
 
 # app/components/example_component/example_component.html.erb
 
-<button class="<%=sass(btn: :purple)%>">Classy Button</button>
+<button class="<%=yass(btn: :purple)%>">Classy Button</button>
 
 # will add the classes "px-3 py-2 text-blue-50"
 ```

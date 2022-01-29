@@ -7,3 +7,5 @@ overrideable_nested:
 
 overrideable_no_base_nested:
   nested: "component-no-base-nested-class"
+
+inherited: "inherited"

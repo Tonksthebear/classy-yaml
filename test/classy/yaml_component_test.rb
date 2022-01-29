@@ -50,4 +50,10 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
     assert_text "overrideable-no-base-class"
     assert_text "component-no-base-nested-class"
   end
+
+  test "can find definitions through inherited function call" do
+    render_inline(TestComponent.new classy: :inherited, inherited: true)
+    assert_text "inherited"
+  end
+
 end

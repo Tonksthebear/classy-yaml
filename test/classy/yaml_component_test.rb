@@ -56,4 +56,14 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
     assert_text "inherited"
   end
 
+  test "can find nested component utility classes" do
+    render_inline(TestComponent::NestedComponent.new classy: :nested)
+    assert_text "nested"
+  end
+
+  test "can find nested component utility classes through inherited function call" do
+    render_inline(TestComponent::NestedComponent.new classy: :nested_inherited, inherited: true)
+    assert_text "nested-inherited"
+  end
+
 end

@@ -1,11 +1,5 @@
-class TestComponent < ViewComponent::Base
-  include Classy::Yaml::ComponentHelpers
-
-  def initialize(classy:)
-    @classy = classy
-  end
-
+class TestComponent < ApplicationComponent
   def call
-    yass(@classy)
+    @inherited ? inherited_call : yass(@classy)
   end
 end

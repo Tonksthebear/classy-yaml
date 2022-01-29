@@ -2,8 +2,8 @@ module Classy
   module Yaml
     module ComponentHelpers
       def yass(*args)
-        component_name = caller.first.split("/").last.split(".").first
-        calling_path = caller.first.split("/")[0...-1].join("/")
+        component_name = self.class.source_location.split("/").last.split(".").first
+        calling_path = self.class.source_location.split("/")[0...-1].join("/")
         classy_file = if Dir.exist?("#{calling_path}/#{component_name}")
                         "#{calling_path}/#{component_name}/#{component_name}.yml"
                       else

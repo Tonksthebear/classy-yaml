@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    classy-yaml (0.6.0)
+    classy-yaml (0.8.0)
       actionpack (>= 6)
       activesupport (>= 6)
       railties (>= 6)
@@ -160,7 +160,6 @@ DEPENDENCIES
   capybara (~> 3.36)
   classy-yaml!
   rails (~> 6)
-  rake
   view_component (>= 2.4)
 
 BUNDLED WITH

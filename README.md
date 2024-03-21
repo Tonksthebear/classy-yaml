@@ -72,6 +72,20 @@ btn:
 
 # will add the classes "px-3 py-2 text-blue-50"
 ```
+## Configuration
+You can configure the gem by creating an initializer in your Rails app. The following options are available:
+
+```ruby
+Classy::Yaml.setup do |config|
+  # The default path for the utility classes YAML file 
+  config.default_path = "config/utility_classes.yml"
+  
+  # Any extra files you want to load in addition to the default file. The last file loaded will overwrite any previous definitions
+  config.extra_files = [
+    "app/yamls/extra_styles.yml"
+  ]
+end
+```
 
 ## Installation
 Add this line to your application's Gemfile:

@@ -42,4 +42,28 @@ class Classy::YamlTest < ActiveSupport::TestCase
       yass(single: :non_existent)
     end
   end
+
+  test "can overwrite the default file classy looks for" do
+    existing_default = Classy::Yaml.default_file
+
+    Classy::Yaml.setup do |config|
+      config.default_file = "config/non_default_classes.yml"
+    end
+
+    assert_empty yass(:single)
+    assert_equal 'new-single-class', yass(:new_single)
+
+    Classy::Yaml.setup do |config|
+      config.default_file = existing_default
+    end
+  end
+
+  test "can add extra utility files for classy to look for" do
+    Classy::Yaml.setup do |config|
+      config.extra_files = "config/extra_utility_classes.yml"
+    end
+
+    assert_equal "single-class", yass(:single)
+    assert_equal 'extra-single-class', yass(:extra_single)
+  end
 end

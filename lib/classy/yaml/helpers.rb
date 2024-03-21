@@ -3,15 +3,14 @@ module Classy
     module Helpers
       def yass(*args)
         classy_yamls = []
-        classy_yamls << YAML.load_file(Rails.root.join("config/utility_classes.yml")) if File.exist?(Rails.root.join("config/utility_classes.yml"))
+        classy_yamls << YAML.load_file(Rails.root.join(Classy::Yaml.default_file)) if File.exist?(Rails.root.join(Classy::Yaml.default_file))
 
-        classy_files_hash = args.find { |arg| arg.is_a?(Hash) && arg.keys.include?(:classy_files) }
-        if classy_files_hash.present?
-          classy_files_hash[:classy_files].each do |file|
-            if File.exist?(file) && YAML.load_file(file)
-              file = YAML.load_file(file)
-              classy_yamls << file if file
-            end
+        classy_files_hash = args.find { |arg| arg.is_a?(Hash) && arg.keys.include?(:classy_files) } || { classy_files: [] }
+
+        (classy_files_hash[:classy_files] + Classy::Yaml.extra_files).each do |file|
+          if File.exist?(file) && YAML.load_file(file)
+            file = YAML.load_file(file)
+            classy_yamls << file if file
           end
         end
 
@@ -26,7 +25,7 @@ module Classy
       private
 
       def flatten_args(root: [], values: [], keys: [], added_classes: [])
-        values.each do|value|
+        values.each do |value|
           if value.is_a?(Hash)
             if value.has_key? :add
               added_classes << value[:add]

@@ -37,10 +37,17 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert true
   end
 
-  test "raise error when calling nested on non-nested" do
-    assert_raises(Classy::Yaml::InvalidKeyError) do
-      yass(single: :non_existent)
-    end
+  test "Log warning error when calling nested on non-nested" do
+    original_logger = Rails.logger
+
+    log_output = StringIO.new
+    Rails.logger = Logger.new(log_output)
+
+    yass(single: :non_existent)
+
+    Rails.logger = original_logger
+
+    assert_match /WARN.*yass called with invalid keys: \{:data=>\[\"single\", \"non_existent\"\]\}/, log_output.string
   end
 
   test "can overwrite the default file classy looks for" do

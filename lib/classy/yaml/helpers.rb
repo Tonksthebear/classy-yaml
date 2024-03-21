@@ -63,7 +63,7 @@ module Classy
                                  classy_yaml.send(:dig, *(key[0...-1] + ['base'])).try(:split, " ")
                                end
             rescue
-              raise Classy::Yaml::InvalidKeyError.new(data: key)
+              Rails.logger.warn(Classy::Yaml::InvalidKeyError.new(data: key))
             end
 
             begin
@@ -74,7 +74,7 @@ module Classy
               base_classes = nil if base_classes.blank?
               fetched_classes = nil if fetched_classes.blank?
             rescue
-              raise Classy::Yaml::InvalidKeyError.new(data: key)
+              Rails.logger.warn(Classy::Yaml::InvalidKeyError.new(data: key))
             end
           end
 

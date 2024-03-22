@@ -12,3 +12,4 @@ docker-compose.yml
 .dockerdev
 dip.yml
 .byebug_history
+.idea/**

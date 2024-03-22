@@ -37,9 +37,40 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert true
   end
 
-  test "raise error when calling nested on non-nested" do
-    assert_raises(Classy::Yaml::InvalidKeyError) do
-      yass(single: :non_existent)
+  test "Log warning error when calling nested on non-nested" do
+    original_logger = Rails.logger
+
+    log_output = StringIO.new
+    Rails.logger = Logger.new(log_output)
+
+    yass(single: :non_existent)
+
+    Rails.logger = original_logger
+
+    assert_match /WARN.*yass called with invalid keys: \{:data=>\[\"single\", \"non_existent\"\]\}/, log_output.string
+  end
+
+  test "can overwrite the default file classy looks for" do
+    existing_default = Classy::Yaml.default_file
+
+    Classy::Yaml.setup do |config|
+      config.default_file = "config/non_default_classes.yml"
     end
+
+    assert_empty yass(:single)
+    assert_equal 'new-single-class', yass(:new_single)
+
+    Classy::Yaml.setup do |config|
+      config.default_file = existing_default
+    end
+  end
+
+  test "can add extra utility files for classy to look for" do
+    Classy::Yaml.setup do |config|
+      config.extra_files = "config/extra_utility_classes.yml"
+    end
+
+    assert_equal "single-class", yass(:single)
+    assert_equal 'extra-single-class', yass(:extra_single)
   end
 end

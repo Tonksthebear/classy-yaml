@@ -1,5 +1,5 @@
 module Classy
   module Yaml
-    VERSION = '0.8.5'
+    VERSION = '1.0'
   end
 end

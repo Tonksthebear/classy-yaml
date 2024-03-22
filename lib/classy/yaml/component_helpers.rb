@@ -11,7 +11,7 @@ module Classy
                        "#{calling_path}/#{calling_file}/#{component_name}.yml"
         ]
 
-        helpers.yass(args, classy_files: classy_files)
+        helpers.yass(args, classy_files: classy_files.uniq)
       end
     end
   end

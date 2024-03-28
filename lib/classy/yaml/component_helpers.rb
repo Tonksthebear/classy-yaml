@@ -7,11 +7,17 @@ module Classy
         component_name = self.class.name.underscore.split("/").last.split(".").first
 
         classy_files = ["#{calling_path}/#{component_name}.yml",
-                       "#{calling_path}/#{calling_file}/#{calling_file}.yml",
-                       "#{calling_path}/#{calling_file}/#{component_name}.yml"
+                        "#{calling_path}/#{calling_file}/#{calling_file}.yml",
+                        "#{calling_path}/#{calling_file}/#{component_name}.yml"
         ]
 
-        helpers.yass(args, classy_files: classy_files.uniq)
+        if args.first.is_a?(Hash)
+          args.first.merge!({ classy_files: classy_files.uniq })
+        else
+          args << { classy_files: classy_files.uniq }
+        end
+
+        helpers.yass(*args)
       end
     end
   end

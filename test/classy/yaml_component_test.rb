@@ -70,4 +70,9 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
     render_inline(TestComponent::NestedComponent.new classy: :nested_inherited, inherited: true)
     assert_text "nested-inherited"
   end
+
+  test "can skip base" do
+    render_inline(TestComponent.new classy: {nested_base: :nested, skip_base: true})
+    assert_text "nested-class"
+  end
 end

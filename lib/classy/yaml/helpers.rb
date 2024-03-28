@@ -16,8 +16,9 @@ module Classy
 
         return if classy_yamls.blank?
 
+        skip_base_hash = args.find { |arg| arg.is_a?(Hash) && arg.keys.include?(:skip_base) } || {}
         keys, classes = flatten_args(values: args)
-        classes += fetch_classes(keys, classy_yamls: classy_yamls)
+        classes += fetch_classes(keys, classy_yamls: classy_yamls, skip_base: skip_base_hash[:skip_base])
 
         return classes.flatten.join(" ")
       end
@@ -48,7 +49,7 @@ module Classy
         return keys, added_classes
       end
 
-      def fetch_classes(keys, classy_yamls: [])
+      def fetch_classes(keys, classy_yamls: [], skip_base: false)
         classes = []
 
         keys.map do |key|
@@ -56,14 +57,16 @@ module Classy
           fetched_classes = nil
 
           classy_yamls.reverse_each do |classy_yaml|
-            begin
-              base_classes ||= if classy_yaml.send(:dig, *key).is_a?(Hash)
-                                 classy_yaml.send(:dig, *(key + ['base'])).try(:split, " ")
-                               else
-                                 classy_yaml.send(:dig, *(key[0...-1] + ['base'])).try(:split, " ")
-                               end
-            rescue
-              Rails.logger.warn(Classy::Yaml::InvalidKeyError.new(data: key))
+            unless skip_base == true
+              begin
+                base_classes ||= if classy_yaml.send(:dig, *key).is_a?(Hash)
+                                   classy_yaml.send(:dig, *(key + ['base'])).try(:split, " ")
+                                 else
+                                   classy_yaml.send(:dig, *(key[0...-1] + ['base'])).try(:split, " ")
+                                 end
+              rescue
+                Rails.logger.warn(Classy::Yaml::InvalidKeyError.new(data: key))
+              end
             end
 
             begin
@@ -78,8 +81,8 @@ module Classy
             end
           end
 
-          classes << base_classes
-          classes << fetched_classes
+          classes << base_classes unless base_classes.blank?
+          classes << fetched_classes unless fetched_classes.blank?
         end
 
         classes.reject!(&:blank?)

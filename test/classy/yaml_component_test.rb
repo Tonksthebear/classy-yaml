@@ -72,7 +72,8 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
   end
 
   test "can skip base" do
-    render_inline(TestComponent.new classy: {nested_base: :nested, skip_base: true})
-    assert_text "nested-class"
+    render_inline(TestComponent.new classy: {overrideable_nested: :nested, skip_base: true})
+    assert_no_text 'component-nested-base-class'
+    assert_text "component-nested-class"
   end
 end

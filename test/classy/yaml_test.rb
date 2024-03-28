@@ -73,4 +73,8 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert_equal "single-class", yass(:single)
     assert_equal 'extra-single-class', yass(:extra_single)
   end
+
+  test "allow skipping of base" do
+    assert_equal "nested-class", yass(nested_base: :nested, skip_base: true)
+  end
 end

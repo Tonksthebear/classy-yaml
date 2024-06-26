@@ -11,10 +11,16 @@ nested_base:
 overrideable: "override-class"
 
 overrideable_nested:
-  base: "overrideable-nested-base-class"
+  base: "overrideable-base-class"
   nested: "overrideable-nested-class"
-  nested2: "overrideable-nested2-class"
+
+overrideable_base_nested:
+  base: "overrideable-base-base-class"
+  nested: "overrideable-base-nested-class"
+  nested2: "overrideable-base-nested2-class"
 
 overrideable_no_base_nested:
   base: "overrideable-no-base-class"
   nested: "overrideable-no-base-nested-class"
+
+engine_default_override: "default-overridden-class"

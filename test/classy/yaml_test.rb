@@ -74,6 +74,17 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert_equal 'extra-single-class', yass(:extra_single)
   end
 
+  test "can add engine utility files that are overridden by default and extra classes" do
+    Classy::Yaml.setup do |config|
+      config.engine_files = "config/engine_utility_classes.yml"
+      config.extra_files = "config/extra_utility_classes.yml"
+    end
+
+    assert_equal "engine-no-override-class", yass(:engine_no_override)
+    assert_equal "default-overridden-class", yass(:engine_default_override)
+    assert_equal 'extra-overidden-class', yass(:engine_extra_override)
+  end
+
   test "allow skipping of base" do
     assert_equal "nested-class", yass(nested_base: :nested, skip_base: true)
   end

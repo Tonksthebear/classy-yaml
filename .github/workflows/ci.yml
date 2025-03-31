@@ -19,10 +19,14 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'  # Keeping 3.3 for linting, but you can change to 3.4 if preferred
-          bundler-cache: true
-      - name: Unset Bundler deployment mode
-        run: bundle config unset deployment
+          ruby-version: '3.3'
+          bundler-cache: false  # Disable automatic bundler caching to avoid premature install
+      - name: Configure Bundler
+        run: |
+          bundle config set --local path vendor/bundle
+          bundle config set --local deployment false
+      - name: Install dependencies
+        run: bundle install --jobs 4
       - name: Run RuboCop
         run: bundle exec rubocop
 
@@ -33,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: ['3.2', '3.3', '3.4']  # Updated to include 3.4
+        ruby-version: ['3.2', '3.3', '3.4']
         gemfile: ['rails7', 'rails8_sprockets', 'rails8_propshaft']
     steps:
       - uses: actions/checkout@v4
@@ -41,9 +45,13 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true
-      - name: Unset Bundler deployment mode
-        run: bundle config unset deployment
+          bundler-cache: false  # Disable automatic bundler caching
+      - name: Configure Bundler
+        run: |
+          bundle config set --local path vendor/bundle
+          bundle config set --local deployment false
+      - name: Install dependencies
+        run: bundle install --jobs 4
       - name: Cache Appraisal dependencies
         uses: actions/cache@v4
         with:

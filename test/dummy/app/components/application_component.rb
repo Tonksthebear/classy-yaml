@@ -12,7 +12,7 @@ class ApplicationComponent < ViewComponent::Base
   end
 
   def class_count
-    @class_count ||= @inherited ? inherited_classes&.split(' ')&.length : classes&.split(' ').length
+    @class_count ||= @inherited ? inherited_classes&.split(" ")&.length : classes&.split(" ").length
   end
 
   def inherited_call

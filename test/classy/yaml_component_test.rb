@@ -10,28 +10,28 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
   end
 
   test "can fetch nested utility classes" do
-    component = TestComponent.new classy: {nested_no_base: :nested}
+    component = TestComponent.new classy: { nested_no_base: :nested }
     render_inline component
     assert_text "nested-no-base-class"
     assert_equal component.class_count, 1
   end
 
   test "can fetch multiple nested utility classes" do
-    component = TestComponent.new classy: {nested_no_base: [:nested, :nested2]}
+    component = TestComponent.new classy: { nested_no_base: [ :nested, :nested2 ] }
     render_inline component
     assert_text "nested-no-base-class nested2-class"
     assert_equal component.class_count, 2
   end
 
   test "includes base if found to nested" do
-    component = TestComponent.new classy: {nested_base: :nested}
+    component = TestComponent.new classy: { nested_base: :nested }
     render_inline component
     assert_text "nested-base-class nested-class"
     assert_equal component.class_count, 2
   end
 
   test "can fetch multiple at same time" do
-    component = TestComponent.new classy: [:single, nested_no_base: :nested]
+    component = TestComponent.new classy: [ :single, nested_no_base: :nested ]
     render_inline component
     assert_text "single-class nested-no-base-class"
     assert_equal component.class_count, 2
@@ -45,7 +45,7 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
   end
 
   test "can override non-base but keep inherited base" do
-    component = TestComponent.new classy: {overrideable_nested: :nested}
+    component = TestComponent.new classy: { overrideable_nested: :nested }
     render_inline component
     assert_text "overrideable-base-class"
     assert_text "component-nested-class"
@@ -53,7 +53,7 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
   end
 
   test "can override nested utility classes" do
-    component = TestComponent.new classy: {overrideable_base_nested: :nested}
+    component = TestComponent.new classy: { overrideable_base_nested: :nested }
     render_inline component
     assert_text "component-base-nested-base-class"
     assert_text "component-base-nested-class"
@@ -61,7 +61,7 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
   end
 
   test "can override multiple nested utility classes" do
-    component = TestComponent.new classy: {overrideable_base_nested: [:nested, :nested2]}
+    component = TestComponent.new classy: { overrideable_base_nested: [ :nested, :nested2 ] }
     render_inline component
     assert_text "component-base-nested-base-class"
     assert_text "component-base-nested-class"
@@ -70,7 +70,7 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
   end
 
   test "can override with original base" do
-    component = TestComponent.new classy: {overrideable_no_base_nested: :nested}
+    component = TestComponent.new classy: { overrideable_no_base_nested: :nested }
     render_inline component
     assert_text "overrideable-no-base-class"
     assert_text "component-no-base-nested-class"
@@ -106,7 +106,7 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
   end
 
   test "can skip base" do
-    component = TestComponent.new classy: {overrideable_base_nested: :nested, skip_base: true}
+    component = TestComponent.new classy: { overrideable_base_nested: :nested, skip_base: true }
     render_inline component
     assert_text "component-base-nested-class"
     assert_equal component.class_count, 1

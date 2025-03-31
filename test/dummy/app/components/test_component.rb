@@ -1,7 +1,7 @@
 class TestComponent < ApplicationComponent
   def before_render
     @classes = @inherited ? inherited_call : yass(@classy)
-    @class_count = @classes.split(' ').length
+    @class_count = @classes.split(" ").length
   end
 
   def classes

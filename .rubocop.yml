@@ -1,5 +1,6 @@
 inherit_gem:
-  rubocop-rails-omakase: .rubocop.yml
+  rubocop-rails-omakase: rubocop.yml
+
 
 AllCops:
   NewCops: enable

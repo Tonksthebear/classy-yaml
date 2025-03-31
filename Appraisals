@@ -20,4 +20,4 @@ appraise "rails8_propshaft" do
   # Ensure propshaft is included
   gem "propshaft"
   gem "view_component", ">= 3.0"
-end 
+end

@@ -3,8 +3,8 @@ require_relative "lib/classy/yaml/version"
 Gem::Specification.new do |spec|
   spec.name        = "classy-yaml"
   spec.version     = Classy::Yaml::VERSION
-  spec.authors     = ["Tonksthebear"]
-  spec.email       = [""]
+  spec.authors     = [ "Tonksthebear" ]
+  spec.email       = [ "" ]
   spec.homepage    = "https://github.com/Tonksthebear/classy-yaml"
   spec.summary     = "Rails helper to allow yaml configuration of utility css classes"
   spec.description = "Rails helper to allow yaml configuration of utility css classes"

@@ -2,6 +2,15 @@ require "test_helper"
 include Classy::Yaml::Helpers
 
 class Classy::YamlTest < ActiveSupport::TestCase
+
+  setup do
+    Classy::Yaml.setup do |config|
+      config.default_file = "config/utility_classes.yml"
+      config.extra_files = []
+      config.engine_files = []
+    end
+  end
+
   test "can fetch single utility class" do
     assert_equal "single-class", yass(:single)
   end
@@ -87,5 +96,102 @@ class Classy::YamlTest < ActiveSupport::TestCase
 
   test "allow skipping of base" do
     assert_equal "nested-class", yass(nested_base: :nested, skip_base: true)
+  end
+
+  test "can fetch array of classes" do
+    assert_equal "array-class array-class2", yass(:array)
+  end
+
+  test "can fetch array of classes with overrides" do
+    assert_equal "array-override-this array-override-this2", yass(:array_override)
+
+    Classy::Yaml.setup do |config|
+      config.extra_files = "config/extra_utility_classes.yml"
+    end
+
+    assert_equal "array-override-class array-override-class2", yass(:array_override)
+  end
+
+  test "caching behavior in development environment" do
+    # Force development environment
+    original_env = Rails.env
+    Rails.env = ActiveSupport::StringInquirer.new("development")
+
+    # First call should load from disk
+    first_result = yass(:single)
+    
+    # Modify the YAML file
+    original_content = File.read(Rails.root.join("config/utility_classes.yml"))
+    File.write(Rails.root.join("config/utility_classes.yml"), "single: \"modified-class\"")
+    
+    # Second call should load from disk again (no caching)
+    second_result = yass(:single)
+    
+    # Restore original content
+    File.write(Rails.root.join("config/utility_classes.yml"), original_content)
+    
+    # Restore original environment
+    Rails.env = original_env
+
+    assert_equal "single-class", first_result
+    assert_equal "modified-class", second_result
+  end
+
+  test "caching behavior in production environment" do
+    # Force production environment
+    original_env = Rails.env
+    Rails.env = ActiveSupport::StringInquirer.new("production")
+
+    # First call should load from disk and cache
+    first_result = yass(:single)
+    
+    # Modify the YAML file
+    original_content = File.read(Rails.root.join("config/utility_classes.yml"))
+    File.write(Rails.root.join("config/utility_classes.yml"), "single: \"modified-class\"")
+    
+    # Second call should use cached value
+    second_result = yass(:single)
+    
+    # Restore original content
+    File.write(Rails.root.join("config/utility_classes.yml"), original_content)
+    
+    # Restore original environment
+    Rails.env = original_env
+
+    assert_equal "single-class", first_result
+    assert_equal "single-class", second_result
+  end
+
+  test "caching is cleared when configuration changes" do
+    # Force production environment
+    original_env = Rails.env
+    Rails.env = ActiveSupport::StringInquirer.new("production")
+
+    # First call should load from disk and cache
+    first_result = yass(:single)
+    puts "First result: #{first_result}"
+    
+    # Change configuration
+    Classy::Yaml.setup do |config|
+      config.default_file = "config/non_default_classes.yml"
+    end
+    
+    second_result = yass(:new_single)
+    puts "Second result: #{second_result}"
+    puts "Default file: #{Classy::Yaml.default_file}"
+    puts "Rails.root: #{Rails.root}"
+    puts "File exists: #{File.exist?(Rails.root.join(Classy::Yaml.default_file))}"
+    puts "File content: #{File.read(Rails.root.join(Classy::Yaml.default_file))}"
+    
+    # Restore original configuration
+    Classy::Yaml.setup do |config|
+      config.default_file = "config/utility_classes.yml"
+    end
+    
+    # Restore original environment
+    Rails.env = original_env
+
+    assert_equal "single-class", first_result
+    assert_equal "new-single-class", second_result
   end
 end

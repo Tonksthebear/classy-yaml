@@ -1,0 +1,13 @@
+inherit_gem:
+  rubocop-rails-omakase: .rubocop.yml
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'bin/*'
+    - 'vendor/**/*'
+    - 'gemfiles/**/*' # Exclude Appraisal generated files
+
+# Add any project-specific overrides below
+# Style/Documentation:
+#   Enabled: false 

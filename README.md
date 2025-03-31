@@ -85,6 +85,23 @@ btn:
 
 # will add the classes "px-3 py-2 text-blue-50"
 ```
+
+yass(:button, :primary) # => "btn btn-primary"
+yass(:button, :secondary) # => "btn btn-secondary"
+yass(:button, :large) # => "btn btn-lg"
+yass(:button, :primary, :large) # => "btn btn-primary btn-lg"
+
+### Array style definition
+
+```
+array:
+  - "px-3 py-2"
+  - "bg-gray"
+  - "text-purple"
+```
+
+yass(:array) # => "px-3 py-2 bg-gray text-purple"
+
 ## Configuration
 You can configure the gem by creating an initializer in your Rails app. The following options are available:
 

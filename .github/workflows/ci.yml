@@ -6,16 +6,22 @@ on:
   pull_request:
     branches: [ main ]
 
+# Add permissions configuration
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3' # Use a recent Ruby for linting
-          bundler-cache: true # Automatically runs bundle install
+          ruby-version: '3.3'
+          bundler-cache: true
 
       - name: Run RuboCop
         run: bundle exec rubocop
@@ -23,12 +29,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: lint
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         ruby-version: ['3.2', '3.3', '3.4']
-        # From Appraisals file
-        gemfile: ['rails7', 'rails8_sprockets', 'rails8_propshaft'] 
+        gemfile: ['rails7', 'rails8_sprockets', 'rails8_propshaft']
 
     steps:
     - uses: actions/checkout@v4
@@ -37,7 +43,18 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby-version }}
-        bundler-cache: true # Runs bundle install
+        bundler-cache: true
+
+    - name: Cache Appraisal dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          .bundle
+          vendor/bundle
+          tmp/cache
+        key: ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-
 
     - name: Install Appraisal dependencies
       run: bundle exec appraisal install

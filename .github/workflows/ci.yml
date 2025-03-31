@@ -23,6 +23,7 @@ jobs:
           ruby-version: '3.3'
           bundler-cache: true
           ruby-bundle-install-path: vendor/bundle
+          bundler-deployment: false
 
       - name: Run RuboCop
         run: bundle exec rubocop
@@ -46,6 +47,7 @@ jobs:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
         ruby-bundle-install-path: vendor/bundle
+        bundler-deployment: false
 
     - name: Cache Appraisal dependencies
       uses: actions/cache@v4

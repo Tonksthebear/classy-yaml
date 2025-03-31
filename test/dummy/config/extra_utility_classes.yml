@@ -1,2 +1,5 @@
 extra_single: "extra-single-class"
 engine_extra_override: "extra-overidden-class"
+array_override:
+  - "array-override-class"
+  - "array-override-class2"

@@ -43,5 +43,4 @@ jobs:
       run: bundle exec appraisal install
 
     - name: Run tests (Appraisal: ${{ matrix.gemfile }})
-      # Assuming 'rake test' is your test command. Adjust if necessary (e.g., 'bundle exec rspec')
-      run: bundle exec appraisal ${{ matrix.gemfile }} rake test 
+      run: bundle exec appraisal ${{ matrix.gemfile }} bin/test

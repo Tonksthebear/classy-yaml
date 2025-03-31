@@ -1,5 +1,13 @@
 single: "single-class"
 
+array:
+  - "array-class"
+  - "array-class2"
+
+array_override:
+  - "array-override-this"
+  - "array-override-this2"
+
 nested_no_base:
   nested: "nested-no-base-class"
   nested2: "nested2-class"

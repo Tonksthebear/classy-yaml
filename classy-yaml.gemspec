@@ -26,4 +26,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "view_component", ">= 2.4"
   spec.add_development_dependency "capybara", ">= 3.36"
+  spec.add_development_dependency "appraisal"
+  spec.add_development_dependency "rubocop", "~> 1.60"
+  spec.add_development_dependency "rubocop-rails-omakase"
 end

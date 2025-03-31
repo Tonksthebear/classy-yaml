@@ -2,7 +2,6 @@ require "test_helper"
 include Classy::Yaml::Helpers
 
 class Classy::YamlTest < ActiveSupport::TestCase
-
   setup do
     Classy::Yaml.setup do |config|
       config.default_file = "config/utility_classes.yml"
@@ -20,7 +19,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
   end
 
   test "can fetch multiple nested utility classes" do
-    assert_equal "nested-no-base-class nested2-class", yass(nested_no_base: [:nested, :nested2])
+    assert_equal "nested-no-base-class nested2-class", yass(nested_no_base: [ :nested, :nested2 ])
   end
 
   test "includes base if found to nested" do
@@ -67,7 +66,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
     end
 
     assert_empty yass(:single)
-    assert_equal 'new-single-class', yass(:new_single)
+    assert_equal "new-single-class", yass(:new_single)
 
     Classy::Yaml.setup do |config|
       config.default_file = existing_default
@@ -80,7 +79,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
     end
 
     assert_equal "single-class", yass(:single)
-    assert_equal 'extra-single-class', yass(:extra_single)
+    assert_equal "extra-single-class", yass(:extra_single)
   end
 
   test "can add engine utility files that are overridden by default and extra classes" do
@@ -91,7 +90,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
 
     assert_equal "engine-no-override-class", yass(:engine_no_override)
     assert_equal "default-overridden-class", yass(:engine_default_override)
-    assert_equal 'extra-overidden-class', yass(:engine_extra_override)
+    assert_equal "extra-overidden-class", yass(:engine_extra_override)
   end
 
   test "allow skipping of base" do
@@ -119,17 +118,17 @@ class Classy::YamlTest < ActiveSupport::TestCase
 
     # First call should load from disk
     first_result = yass(:single)
-    
+
     # Modify the YAML file
     original_content = File.read(Rails.root.join("config/utility_classes.yml"))
     File.write(Rails.root.join("config/utility_classes.yml"), "single: \"modified-class\"")
-    
+
     # Second call should load from disk again (no caching)
     second_result = yass(:single)
-    
+
     # Restore original content
     File.write(Rails.root.join("config/utility_classes.yml"), original_content)
-    
+
     # Restore original environment
     Rails.env = original_env
 
@@ -144,17 +143,17 @@ class Classy::YamlTest < ActiveSupport::TestCase
 
     # First call should load from disk and cache
     first_result = yass(:single)
-    
+
     # Modify the YAML file
     original_content = File.read(Rails.root.join("config/utility_classes.yml"))
     File.write(Rails.root.join("config/utility_classes.yml"), "single: \"modified-class\"")
-    
+
     # Second call should use cached value
     second_result = yass(:single)
-    
+
     # Restore original content
     File.write(Rails.root.join("config/utility_classes.yml"), original_content)
-    
+
     # Restore original environment
     Rails.env = original_env
 
@@ -170,24 +169,24 @@ class Classy::YamlTest < ActiveSupport::TestCase
     # First call should load from disk and cache
     first_result = yass(:single)
     puts "First result: #{first_result}"
-    
+
     # Change configuration
     Classy::Yaml.setup do |config|
       config.default_file = "config/non_default_classes.yml"
     end
-    
+
     second_result = yass(:new_single)
     puts "Second result: #{second_result}"
     puts "Default file: #{Classy::Yaml.default_file}"
     puts "Rails.root: #{Rails.root}"
     puts "File exists: #{File.exist?(Rails.root.join(Classy::Yaml.default_file))}"
     puts "File content: #{File.read(Rails.root.join(Classy::Yaml.default_file))}"
-    
+
     # Restore original configuration
     Classy::Yaml.setup do |config|
       config.default_file = "config/utility_classes.yml"
     end
-    
+
     # Restore original environment
     Rails.env = original_env
 

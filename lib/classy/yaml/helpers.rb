@@ -47,8 +47,8 @@ module Classy
         begin
           path_obj = file_path.is_a?(Pathname) ? file_path : Rails.root.join(file_path)
           if File.exist?(path_obj)
-            content = File.read(path_obj, encoding: 'UTF-8')
-            parsed_yaml = YAML.safe_load(content, permitted_classes: [Symbol, String, Array, Hash], aliases: true)
+            content = File.read(path_obj, encoding: "UTF-8")
+            parsed_yaml = YAML.safe_load(content, permitted_classes: [ Symbol, String, Array, Hash ], aliases: true)
             classy_yamls << parsed_yaml if parsed_yaml && parsed_yaml.is_a?(Hash)
           end
         rescue Psych::SyntaxError => e
@@ -73,14 +73,14 @@ module Classy
             end
 
             value.keys.each do |key|
-              values << (root + [key.to_s])
-              flatten_args(root: root + [key.to_s], values: [value[key]], keys: keys, added_classes: added_classes)
+              values << (root + [ key.to_s ])
+              flatten_args(root: root + [ key.to_s ], values: [ value[key] ], keys: keys, added_classes: added_classes)
             end
           else
             if value.is_a?(Array)
               flatten_args(root: root, values: value, keys: keys, added_classes: added_classes)
             else
-              keys << (root + [value.to_s])
+              keys << (root + [ value.to_s ])
             end
           end
         end
@@ -106,12 +106,12 @@ module Classy
               begin
                 value_at_key = classy_yaml.send(:dig, *key)
                 base_value = if value_at_key.is_a?(Hash)
-                               classy_yaml.send(:dig, *(key + ['base']))
-                             elsif key.length > 1
-                               classy_yaml.send(:dig, *(key[0...-1] + ['base']))
-                             else
+                               classy_yaml.send(:dig, *(key + [ "base" ]))
+                elsif key.length > 1
+                               classy_yaml.send(:dig, *(key[0...-1] + [ "base" ]))
+                else
                                nil
-                             end
+                end
                 normalized_base = normalize_original(base_value)
                 base_classes ||= normalized_base
               rescue

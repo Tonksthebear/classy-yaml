@@ -83,8 +83,8 @@ module Classy
       self.engine_files.each do |file_path|
         begin
           if File.exist?(file_path)
-            content = File.read(file_path, encoding: 'UTF-8')
-            parsed_yaml = YAML.safe_load(content, permitted_classes: [Symbol, String, Array, Hash], aliases: true)
+            content = File.read(file_path, encoding: "UTF-8")
+            parsed_yaml = YAML.safe_load(content, permitted_classes: [ Symbol, String, Array, Hash ], aliases: true)
             yamls << parsed_yaml if parsed_yaml && parsed_yaml.is_a?(Hash)
           end
         rescue Psych::SyntaxError => e
@@ -100,8 +100,8 @@ module Classy
       default_path = Rails.root.join(self.default_file)
       begin
         if File.exist?(default_path)
-          content = File.read(default_path, encoding: 'UTF-8')
-          parsed_yaml = YAML.safe_load(content, permitted_classes: [Symbol, String, Array, Hash], aliases: true)
+          content = File.read(default_path, encoding: "UTF-8")
+          parsed_yaml = YAML.safe_load(content, permitted_classes: [ Symbol, String, Array, Hash ], aliases: true)
           return parsed_yaml if parsed_yaml && parsed_yaml.is_a?(Hash)
         end
       rescue Psych::SyntaxError => e

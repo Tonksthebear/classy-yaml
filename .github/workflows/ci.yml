@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-# Add permissions configuration
 permissions:
   contents: read
   pull-requests: write
@@ -20,11 +19,10 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: '3.3'  # Keeping 3.3 for linting, but you can change to 3.4 if preferred
           bundler-cache: true
-          ruby-bundle-install-path: vendor/bundle
-          bundler-deployment: false
-
+      - name: Unset Bundler deployment mode
+        run: bundle config unset deployment
       - name: Run RuboCop
         run: bundle exec rubocop
 
@@ -35,30 +33,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: ['3.2', '3.3', '3.4']
+        ruby-version: ['3.2', '3.3', '3.4']  # Updated to include 3.4
         gemfile: ['rails7', 'rails8_sprockets', 'rails8_propshaft']
-
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Ruby ${{ matrix.ruby-version }}
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby-version }}
-        bundler-cache: true
-        ruby-bundle-install-path: vendor/bundle
-        bundler-deployment: false
-
-    - name: Cache Appraisal dependencies
-      uses: actions/cache@v4
-      with:
-        path: vendor/bundle
-        key: ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-${{ hashFiles('Gemfile.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-
-
-    - name: Install Appraisal dependencies
-      run: bundle exec appraisal install
-
-    - name: Run tests
-      run: bundle exec appraisal ${{ matrix.gemfile }} bin/test
+      - uses: actions/checkout@v4
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - name: Unset Bundler deployment mode
+        run: bundle config unset deployment
+      - name: Cache Appraisal dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-
+      - name: Install Appraisal dependencies
+        run: bundle exec appraisal install
+      - name: Run tests
+        run: bundle exec appraisal ${{ matrix.gemfile }} bin/test

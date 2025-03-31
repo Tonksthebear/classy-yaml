@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3' # Use a recent Ruby for linting
+          bundler-cache: true # Automatically runs bundle install
+
+      - name: Run RuboCop
+        run: bundle exec rubocop
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ['3.2', '3.3', '3.4']
+        # From Appraisals file
+        gemfile: ['rails7', 'rails8_sprockets', 'rails8_propshaft'] 
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Ruby ${{ matrix.ruby-version }}
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true # Runs bundle install
+
+    - name: Install Appraisal dependencies
+      run: bundle exec appraisal install
+
+    - name: Run tests (Appraisal: ${{ matrix.gemfile }})
+      # Assuming 'rake test' is your test command. Adjust if necessary (e.g., 'bundle exec rspec')
+      run: bundle exec appraisal ${{ matrix.gemfile }} rake test 

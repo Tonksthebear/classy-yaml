@@ -7,5 +7,4 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gemspec
 
 gem "capybara", "~> 3.36"
-gem "rails", "~>6"
 gem "view_component", ">= 2.4"

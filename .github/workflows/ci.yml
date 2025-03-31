@@ -22,6 +22,7 @@ jobs:
         with:
           ruby-version: '3.3'
           bundler-cache: true
+          ruby-bundle-install-path: vendor/bundle
 
       - name: Run RuboCop
         run: bundle exec rubocop
@@ -44,15 +45,13 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
+        ruby-bundle-install-path: vendor/bundle
 
     - name: Cache Appraisal dependencies
       uses: actions/cache@v4
       with:
-        path: |
-          .bundle
-          vendor/bundle
-          tmp/cache
-        key: ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-${{ hashFiles('**/Gemfile.lock') }}
+        path: vendor/bundle
+        key: ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-${{ hashFiles('Gemfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-appraisal-${{ matrix.ruby-version }}-${{ matrix.gemfile }}-
 

@@ -140,11 +140,11 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal
-  capybara (~> 3.36)
+  capybara (~> 3.36, >= 3.36)
   classy-yaml!
   rubocop (~> 1.60)
   rubocop-rails-omakase
   view_component (>= 2.4)
 
 BUNDLED WITH
-   2.2.26
+   2.7.1

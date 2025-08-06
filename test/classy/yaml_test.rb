@@ -371,4 +371,106 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert_includes result_enabled, 'class="single-class"'
     assert_not_includes result_enabled, 'class="single"'
   end
+
+  test "text_field_tag helper works with override" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that text_field_tag processes class symbols
+    result = helper.text_field_tag(:name, "value", class: :single)
+    assert_includes result, "single-class"
+    assert_includes result, 'class="single-class"'
+  end
+
+  test "select_tag helper works with override" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that select_tag processes class symbols
+    options = "<option value='1'>Option 1</option>"
+    result = helper.select_tag(:name, options, class: :single)
+    assert_includes result, "single-class"
+    assert_includes result, 'class="single-class"'
+  end
+
+  test "password_field_tag helper works with override" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that password_field_tag processes class symbols
+    result = helper.password_field_tag(:password, nil, class: :single)
+    assert_includes result, "single-class"
+    assert_includes result, 'class="single-class"'
+  end
+
+  test "button_tag helper works with override" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that button_tag processes class symbols
+    result = helper.button_tag("Click me", class: :single)
+    assert_includes result, "single-class"
+    assert_includes result, 'class="single-class"'
+  end
+
+  test "link_to helper works with override" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that link_to processes class symbols
+    result = helper.link_to("Click here", "/path", class: :single)
+    assert_includes result, "single-class"
+    assert_includes result, 'class="single-class"'
+  end
+
+  test "multiple helpers work together with override" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test multiple helpers in sequence
+    text_result = helper.text_field_tag(:name, "value", class: :single)
+    select_result = helper.select_tag(:category, "<option>Test</option>", class: { nested_no_base: :nested })
+    button_result = helper.button_tag("Submit", class: :single)
+
+    # Verify all results have processed classes
+    assert_includes text_result, 'class="single-class"'
+    assert_includes select_result, 'class="nested-no-base-class"'
+    assert_includes button_result, 'class="single-class"'
+  end
 end

@@ -96,9 +96,10 @@ module Classy
           alias_method :classy_yaml_original_tag_options, :tag_options
 
           def tag_options(options, escape = true)
-            if options && options[:class]
+            if options
+              class_key = options.key?(:class) ? :class : "class"
               options = options.dup
-              val = options[:class]
+              val = options[class_key]
               if val.is_a?(Symbol) || val.is_a?(Hash)
                 options[:class] = yass(val)
               end

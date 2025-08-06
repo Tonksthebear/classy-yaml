@@ -28,6 +28,12 @@
     *   Modifies the lookup behavior of `yass` to first check for a component-specific YAML file (e.g., `example_component.yml` for `ExampleComponent`).
     *   Falls back to the globally configured YAML files if definitions are not found in the component's sidecar file.
 
+5.  **Tag Helper Override (`override_tag_helpers`):**
+    *   Optional configuration that automatically overrides Rails `tag` helper method.
+    *   When enabled, automatically processes `:class` options that are Symbols or Hashes through the `yass` helper.
+    *   Provides seamless integration between Classy YAML and Rails tag helpers.
+    *   Applied automatically during `Classy::Yaml.setup` when `override_tag_helpers = true`.
+
 ## Data Flow
 1.  Rails Initializer: Configures paths (`Classy::Yaml.setup`).
 2.  Gem Load/Initialization: Loads YAML files from configured paths into memory.

@@ -100,7 +100,7 @@ module Classy
               class_key = options.key?(:class) ? :class : "class"
               options = options.dup
               val = options[class_key]
-              if val.is_a?(Symbol) || val.is_a?(Hash)
+              if val.is_a?(Symbol) || val.is_a?(Hash) || val.is_a?(Array)
                 options[:class] = yass(val)
               end
             end

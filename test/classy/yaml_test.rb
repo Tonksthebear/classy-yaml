@@ -249,6 +249,42 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert_includes result, 'class="nested-no-base-class"'
   end
 
+  test "tag helper automatically converts array class to yass result" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that an array class gets converted to yass result
+    result = helper.tag.div(class: [ :single, :array ])
+    assert_includes result, "single-class"
+    assert_includes result, "array-class"
+    assert_includes result, "array-class2"
+    assert_includes result, 'class="single-class array-class array-class2"'
+  end
+
+  test "tag helper converts mixed string and symbol arrays" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that mixed arrays get converted to yass result
+    result = helper.tag.div(class: [ "single", :array ])
+    assert_includes result, "single-class"
+    assert_includes result, "array-class"
+    assert_includes result, "array-class2"
+    assert_includes result, 'class="single-class array-class array-class2"'
+  end
+
   test "tag helper processes nested hash classes correctly" do
     # Enable tag helper override
     Classy::Yaml.setup do |config|
@@ -282,7 +318,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert_not_includes result, "single-class"
   end
 
-  test "tag helper does not convert array class values" do
+  test "tag helper converts string array class values" do
     # Enable tag helper override
     Classy::Yaml.setup do |config|
       config.override_tag_helpers = true
@@ -292,10 +328,12 @@ class Classy::YamlTest < ActiveSupport::TestCase
     helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
     helper.extend(Classy::Yaml::Helpers)
 
-    # Test that array class values are left unchanged
-    result = helper.tag.div(class: [ "class1", "class2" ])
-    assert_includes result, 'class="class1 class2"'
-    assert_not_includes result, "single-class"
+    # Test that string array class values are processed by yass
+    result = helper.tag.div(class: [ "single", "array" ])
+    assert_includes result, "single-class"
+    assert_includes result, "array-class"
+    assert_includes result, "array-class2"
+    assert_includes result, 'class="single-class array-class array-class2"'
   end
 
   test "tag helper works with multiple options" do
@@ -372,7 +410,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert_not_includes result_enabled, 'class="single"'
   end
 
-  test "text_field_tag helper works with override" do
+  test "form and url helpers work with override" do
     # Enable tag helper override
     Classy::Yaml.setup do |config|
       config.override_tag_helpers = true
@@ -382,75 +420,44 @@ class Classy::YamlTest < ActiveSupport::TestCase
     helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
     helper.extend(Classy::Yaml::Helpers)
 
-    # Test that text_field_tag processes class symbols
-    result = helper.text_field_tag(:name, "value", class: :single)
-    assert_includes result, "single-class"
-    assert_includes result, 'class="single-class"'
-  end
+    # Test text_field_tag with symbol class
+    text_result = helper.text_field_tag(:name, "value", class: :single)
+    assert_includes text_result, "single-class", "Failed to override text_field_tag with symbol class"
+    assert_includes text_result, 'class="single-class"', "Failed to override text_field_tag with symbol class"
 
-  test "select_tag helper works with override" do
-    # Enable tag helper override
-    Classy::Yaml.setup do |config|
-      config.override_tag_helpers = true
-    end
+    # Test text_field_tag with array classes
+    text_array_result = helper.text_field_tag(:name, "value", class: [ :single, :array ])
+    assert_includes text_array_result, "single-class", "Failed to override text_field_tag with array classes"
+    assert_includes text_array_result, "array-class", "Failed to override text_field_tag with array classes"
+    assert_includes text_array_result, "array-class2", "Failed to override text_field_tag with array classes"
+    assert_includes text_array_result, 'class="single-class array-class array-class2"', "Failed to override text_field_tag with array classes"
 
-    # Create a test helper instance using the test app's view context
-    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
-    helper.extend(Classy::Yaml::Helpers)
+    # Test select_tag with symbol class
+    select_result = helper.select_tag(:name, "<option value='1'>Option 1</option>", class: :single)
+    assert_includes select_result, "single-class", "Failed to override select_tag with symbol class"
+    assert_includes select_result, 'class="single-class"', "Failed to override select_tag with symbol class"
 
-    # Test that select_tag processes class symbols
-    options = "<option value='1'>Option 1</option>"
-    result = helper.select_tag(:name, options, class: :single)
-    assert_includes result, "single-class"
-    assert_includes result, 'class="single-class"'
-  end
+    # Test password_field_tag with symbol class
+    password_result = helper.password_field_tag(:password, nil, class: :single)
+    assert_includes password_result, "single-class", "Failed to override password_field_tag with symbol class"
+    assert_includes password_result, 'class="single-class"', "Failed to override password_field_tag with symbol class"
 
-  test "password_field_tag helper works with override" do
-    # Enable tag helper override
-    Classy::Yaml.setup do |config|
-      config.override_tag_helpers = true
-    end
+    # Test button_tag with symbol class
+    button_result = helper.button_tag("Click me", class: :single)
+    assert_includes button_result, "single-class", "Failed to override button_tag with symbol class"
+    assert_includes button_result, 'class="single-class"', "Failed to override button_tag with symbol class"
 
-    # Create a test helper instance using the test app's view context
-    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
-    helper.extend(Classy::Yaml::Helpers)
+    # Test button_tag with array classes
+    button_array_result = helper.button_tag("Click me", class: [ :single, :array ])
+    assert_includes button_array_result, "single-class", "Failed to override button_tag with array classes"
+    assert_includes button_array_result, "array-class", "Failed to override button_tag with array classes"
+    assert_includes button_array_result, "array-class2", "Failed to override button_tag with array classes"
+    assert_includes button_array_result, 'class="single-class array-class array-class2"', "Failed to override button_tag with array classes"
 
-    # Test that password_field_tag processes class symbols
-    result = helper.password_field_tag(:password, nil, class: :single)
-    assert_includes result, "single-class"
-    assert_includes result, 'class="single-class"'
-  end
-
-  test "button_tag helper works with override" do
-    # Enable tag helper override
-    Classy::Yaml.setup do |config|
-      config.override_tag_helpers = true
-    end
-
-    # Create a test helper instance using the test app's view context
-    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
-    helper.extend(Classy::Yaml::Helpers)
-
-    # Test that button_tag processes class symbols
-    result = helper.button_tag("Click me", class: :single)
-    assert_includes result, "single-class"
-    assert_includes result, 'class="single-class"'
-  end
-
-  test "link_to helper works with override" do
-    # Enable tag helper override
-    Classy::Yaml.setup do |config|
-      config.override_tag_helpers = true
-    end
-
-    # Create a test helper instance using the test app's view context
-    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
-    helper.extend(Classy::Yaml::Helpers)
-
-    # Test that link_to processes class symbols
-    result = helper.link_to("Click here", "/path", class: :single)
-    assert_includes result, "single-class"
-    assert_includes result, 'class="single-class"'
+    # Test link_to with symbol class
+    link_result = helper.link_to("Click here", "/path", class: :single)
+    assert_includes link_result, "single-class", "Failed to override link_to with symbol class"
+    assert_includes link_result, 'class="single-class"', "Failed to override link_to with symbol class"
   end
 
   test "multiple helpers work together with override" do

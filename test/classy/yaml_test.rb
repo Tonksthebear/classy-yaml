@@ -482,4 +482,24 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert_includes select_result, 'class="nested-no-base-class"'
     assert_includes button_result, 'class="single-class"'
   end
+
+  test "tailwind_merge is enabled when tailwind_merge gem is available" do
+    helper = Classy::Yaml::Helpers
+
+    helper.instance_variable_set(:@tailwind_merge_available, true)
+    result = helper.yass(:single, :array, add: "px-1 p-2")
+    assert_includes result, "single-class"
+    assert_includes result, "array-class"
+    assert_includes result, "array-class2"
+    assert_not_includes result, "px-1"
+    assert_includes result, "p-2"
+
+    helper.instance_variable_set(:@tailwind_merge_available, false)
+    result = helper.yass(:single, :array, add: "px-1 p-2")
+    assert_includes result, "single-class"
+    assert_includes result, "array-class"
+    assert_includes result, "array-class2"
+    assert_includes result, "px-1"
+    assert_includes result, "p-2"
+  end
 end

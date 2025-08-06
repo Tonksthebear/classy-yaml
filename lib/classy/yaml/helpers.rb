@@ -34,10 +34,38 @@ module Classy
         keys, classes = flatten_args(values: args)
         classes += fetch_classes(keys, classy_yamls: classy_yamls, skip_base: skip_base_hash[:skip_base])
 
-        classes.flatten.uniq.join(" ")
+        # Use tailwind_merge if available, otherwise fall back to simple join
+        merge_classes(classes.flatten.uniq)
       end
 
       private
+
+      # Merges CSS classes using tailwind_merge if available, otherwise uses simple join
+      # @param classes [Array] Array of CSS class strings
+      # @return [String] Merged CSS classes
+      def merge_classes(classes)
+        return "" if classes.blank?
+
+        if tailwind_merge_available?
+          # Use tailwind_merge for intelligent class merging
+          TailwindMerge::Merger.new.merge(classes)
+        else
+          # Fall back to simple space-joined classes
+          classes.join(" ")
+        end
+      end
+
+      # Checks if tailwind_merge gem is available
+      # @return [Boolean] True if tailwind_merge is available
+      def tailwind_merge_available?
+        return @tailwind_merge_available if defined?(@tailwind_merge_available)
+        @tailwind_merge_available = begin
+          require "tailwind_merge"
+          true
+        rescue LoadError
+          false
+        end
+      end
 
       # Loads a YAML file and adds its contents to the classy_yamls array
       # @param file_path [String, Pathname] Path to the YAML file

@@ -24,6 +24,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "actionpack", ">= 6"
   spec.add_dependency "railties", ">= 6"
 
+  # Optional dependency for Tailwind CSS class merging
+  spec.add_development_dependency "tailwind_merge", "~> 1.0"
+
   spec.add_development_dependency "view_component", ">= 2.4"
   spec.add_development_dependency "capybara", ">= 3.36"
   spec.add_development_dependency "appraisal"

@@ -168,7 +168,6 @@ class Classy::YamlTest < ActiveSupport::TestCase
 
     # First call should load from disk and cache
     first_result = yass(:single)
-    puts "First result: #{first_result}"
 
     # Change configuration
     Classy::Yaml.setup do |config|
@@ -176,11 +175,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
     end
 
     second_result = yass(:new_single)
-    puts "Second result: #{second_result}"
-    puts "Default file: #{Classy::Yaml.default_file}"
-    puts "Rails.root: #{Rails.root}"
-    puts "File exists: #{File.exist?(Rails.root.join(Classy::Yaml.default_file))}"
-    puts "File content: #{File.read(Rails.root.join(Classy::Yaml.default_file))}"
+
 
     # Restore original configuration
     Classy::Yaml.setup do |config|
@@ -192,5 +187,188 @@ class Classy::YamlTest < ActiveSupport::TestCase
 
     assert_equal "single-class", first_result
     assert_equal "new-single-class", second_result
+  end
+
+  test "override_tag_helpers configuration option" do
+    # Reset to default configuration first
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = false
+    end
+
+    # Test that the configuration option exists and defaults to false
+    assert_equal false, Classy::Yaml.override_tag_helpers
+
+    # Test that we can set it to true
+    Classy::Yaml.override_tag_helpers = true
+    assert_equal true, Classy::Yaml.override_tag_helpers
+
+    # Test that we can set it back to false
+    Classy::Yaml.override_tag_helpers = false
+    assert_equal false, Classy::Yaml.override_tag_helpers
+  end
+
+  test "tag helper override is applied when enabled" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Test that the override method exists in ActionView::Helpers::TagHelper::TagBuilder
+    assert ActionView::Helpers::TagHelper::TagBuilder.method_defined?(:classy_yaml_original_tag_options)
+  end
+
+  test "tag helper automatically converts symbol class to yass result" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that a symbol class gets converted to yass result
+    result = helper.tag.div(class: :single)
+    assert_includes result, "single-class"
+    assert_includes result, 'class="single-class"'
+  end
+
+  test "tag helper automatically converts hash class to yass result" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that a hash class gets converted to yass result
+    result = helper.tag.div(class: { nested_no_base: :nested })
+    assert_includes result, "nested-no-base-class"
+    assert_includes result, 'class="nested-no-base-class"'
+  end
+
+  test "tag helper processes nested hash classes correctly" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that nested hash classes work correctly
+    result = helper.tag.div(class: { nested_base: :nested })
+    assert_includes result, "nested-base-class"
+    assert_includes result, "nested-class"
+    assert_includes result, 'class="nested-base-class nested-class"'
+  end
+
+  test "tag helper does not convert string class values" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that string class values are left unchanged
+    result = helper.tag.div(class: "existing-class")
+    assert_includes result, 'class="existing-class"'
+    assert_not_includes result, "single-class"
+  end
+
+  test "tag helper does not convert array class values" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that array class values are left unchanged
+    result = helper.tag.div(class: [ "class1", "class2" ])
+    assert_includes result, 'class="class1 class2"'
+    assert_not_includes result, "single-class"
+  end
+
+  test "tag helper works with multiple options" do
+    # Enable tag helper override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that other options are preserved
+    result = helper.tag.div(class: :single, id: "test-id", data: { test: "value" })
+    assert_includes result, 'class="single-class"'
+    assert_includes result, 'id="test-id"'
+    assert_includes result, 'data-test="value"'
+  end
+
+  test "tag helper override is disabled by default" do
+    # Reset to default configuration and clear any existing override
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = false
+    end
+
+    # Clear the override by removing the method
+    if ActionView::Helpers::TagHelper::TagBuilder.method_defined?(:classy_yaml_original_tag_options)
+      ActionView::Helpers::TagHelper::TagBuilder.class_eval do
+        alias_method :tag_options, :classy_yaml_original_tag_options
+        remove_method :classy_yaml_original_tag_options
+      end
+    end
+
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test that symbol class values are not converted when disabled
+    result = helper.tag.div(class: :single)
+    # Should contain the symbol as-is, not the yass result
+    assert_includes result, 'class="single"'
+    assert_not_includes result, "single-class"
+  end
+
+  test "tag helper override can be toggled on and off" do
+    # Create a test helper instance using the test app's view context
+    helper = ActionView::Base.new(ActionView::LookupContext.new([]), {}, nil)
+    helper.extend(Classy::Yaml::Helpers)
+
+    # Test with override disabled
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = false
+    end
+
+    # Clear the override by removing the method
+    if ActionView::Helpers::TagHelper::TagBuilder.method_defined?(:classy_yaml_original_tag_options)
+      ActionView::Helpers::TagHelper::TagBuilder.class_eval do
+        alias_method :tag_options, :classy_yaml_original_tag_options
+        remove_method :classy_yaml_original_tag_options
+      end
+    end
+
+    result_disabled = helper.tag.div(class: :single)
+    assert_includes result_disabled, 'class="single"'
+    assert_not_includes result_disabled, "single-class"
+
+    # Test with override enabled
+    Classy::Yaml.setup do |config|
+      config.override_tag_helpers = true
+    end
+
+    result_enabled = helper.tag.div(class: :single)
+    assert_includes result_enabled, 'class="single-class"'
+    assert_not_includes result_enabled, 'class="single"'
   end
 end

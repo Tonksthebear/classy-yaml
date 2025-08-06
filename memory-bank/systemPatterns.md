@@ -22,6 +22,7 @@
     *   Looks up the corresponding classes in the loaded/merged YAML definitions.
     *   Handles retrieving and prepending `base` classes unless `skip_base: true` is provided.
     *   Returns a string of CSS classes.
+    *   **NEW**: Integrates with `tailwind_merge` gem when available for intelligent class merging.
 
 4.  **ViewComponent Integration (`Classy::Yaml::ComponentHelpers`):**
     *   A specific module designed to be included in `ViewComponent::Base` subclasses.
@@ -34,6 +35,14 @@
     *   Provides seamless integration between Classy YAML and Rails tag helpers.
     *   Applied automatically during `Classy::Yaml.setup` when `override_tag_helpers = true`.
 
+6.  **Tailwind Merge Integration:**
+    *   **NEW**: Optional integration with the `tailwind_merge` gem for intelligent CSS class merging.
+    *   Automatically detects if `tailwind_merge` is available in the application.
+    *   When available, uses `TailwindMerge::Merger.new.merge()` for intelligent class conflict resolution.
+    *   When not available, falls back to simple space-joined class strings.
+    *   Caches the availability check to avoid repeated require attempts.
+    *   Maintains backward compatibility with existing class merging behavior.
+
 ## Data Flow
 1.  Rails Initializer: Configures paths (`Classy::Yaml.setup`).
 2.  Gem Load/Initialization: Loads YAML files from configured paths into memory.
@@ -44,4 +53,5 @@
     *   Finds matching `key` and `value`.
     *   Retrieves associated class string.
     *   Retrieves `base` class string for the `key` (if exists and `skip_base` is not true).
-    *   Combines and returns the final class string. 
+    *   **NEW**: Merges classes using `tailwind_merge` if available, otherwise uses simple join.
+    *   Returns the final class string. 

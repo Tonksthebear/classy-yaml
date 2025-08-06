@@ -8,3 +8,4 @@ gemspec
 
 gem "capybara", "~> 3.36"
 gem "view_component", ">= 2.4"
+gem "tailwind_merge", "~> 1.0"

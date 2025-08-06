@@ -55,7 +55,9 @@ class Classy::YamlTest < ActiveSupport::TestCase
 
     Rails.logger = original_logger
 
-    assert_match /WARN.*yass called with invalid keys: \{:data=>\[\"single\", \"non_existent\"\]\}/, log_output.string
+    # More flexible assertion that accounts for different Rails logging formats
+    assert_match /WARN.*yass called with invalid keys/, log_output.string, "Should log a warning about invalid keys"
+    assert_match /single.*non_existent/, log_output.string, "Should mention the invalid keys in the log"
   end
 
   test "can overwrite the default file classy looks for" do

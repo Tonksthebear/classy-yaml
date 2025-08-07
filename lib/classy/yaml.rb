@@ -88,25 +88,10 @@ module Classy
     private
 
     def self.apply_tag_helper_override
-      return unless defined?(ActionView::Helpers::TagHelper)
+      require "classy/yaml/tag_helper"
 
-      # Override the TagBuilder class which is what the tag method returns
-      ActionView::Helpers::TagHelper::TagBuilder.class_eval do
-        unless method_defined?(:classy_yaml_original_tag_options)
-          alias_method :classy_yaml_original_tag_options, :tag_options
-
-          def tag_options(options, escape = true)
-            if options
-              class_key = options.key?(:class) ? :class : "class"
-              options = options.dup
-              val = options[class_key]
-              if val.is_a?(Symbol) || val.is_a?(Hash) || val.is_a?(Array)
-                options[:class] = yass(val)
-              end
-            end
-            classy_yaml_original_tag_options(options, escape)
-          end
-        end
+      ActiveSupport.on_load(:action_view) do
+        ActionView::Helpers::TagHelper::TagBuilder.prepend(Classy::Yaml::TagHelper)
       end
     end
 

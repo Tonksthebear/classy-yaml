@@ -247,4 +247,26 @@ class Classy::YamlTest < ActiveSupport::TestCase
     assert_includes result, "px-1"
     assert_includes result, "p-2"
   end
+
+  test "add classes have highest priority over yaml classes" do
+    # Test without TailwindMerge - add classes should appear last in the string
+    result = yass(:single, add: "override-class")
+    assert_equal "single-class override-class", result
+
+    # Test with multiple yaml classes and add classes - add should come last
+    result = yass(:single, :array, add: "additional-class extra-class")
+    assert_equal "single-class array-class array-class2 additional-class extra-class", result
+  end
+
+  test "add classes appear after yaml classes in output order" do
+    # Verify the order is: [yaml classes] then [add classes]
+    result = yass(:array, add: "first-add second-add")
+
+    # Split result and check that yaml classes come before add classes
+    classes = result.split(" ")
+    yaml_end_index = classes.rindex("array-class2")
+    add_start_index = classes.index("first-add")
+
+    assert yaml_end_index < add_start_index, "Add classes should come after yaml classes"
+  end
 end

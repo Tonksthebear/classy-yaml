@@ -31,8 +31,9 @@ module Classy
         return "" if classy_yamls.blank?
 
         skip_base_hash = args.find { |arg| arg.is_a?(Hash) && arg.keys.include?(:skip_base) } || {}
-        keys, classes = flatten_args(values: args)
-        classes += fetch_classes(keys, classy_yamls: classy_yamls, skip_base: skip_base_hash[:skip_base])
+        keys, add_classes = flatten_args(values: args)
+        classes = fetch_classes(keys, classy_yamls: classy_yamls, skip_base: skip_base_hash[:skip_base])
+        classes += add_classes
 
         # Use tailwind_merge if available, otherwise fall back to simple join
         merge_classes(classes.flatten.uniq)

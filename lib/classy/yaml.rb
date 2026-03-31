@@ -93,6 +93,16 @@ module Classy
       ActiveSupport.on_load(:action_view) do
         ActionView::Helpers::TagHelper::TagBuilder.prepend(Classy::Yaml::TagHelper)
       end
+
+      apply_icon_helper_override
+    end
+
+    def self.apply_icon_helper_override
+      return unless defined?(RailsIcons::Helpers::IconHelper)
+
+      require "classy/yaml/icon_helper"
+
+      RailsIcons::Helpers::IconHelper.prepend(Classy::Yaml::IconHelper)
     end
 
     def self.load_engine_yamls

@@ -25,6 +25,9 @@ module Classy
     @cached_engine_yamls = nil
     @cached_default_yaml = nil
     @load_lock = Mutex.new # Prevent race conditions during lazy loading
+    @file_cache = {}
+    @file_lock = Mutex.new
+    @merger_lock = Mutex.new
 
     # -- Configuration Setters with Path Resolution --
     def self.engine_files=(value)
@@ -34,7 +37,7 @@ module Classy
 
     def self.extra_files=(value)
       @@extra_files = Array.wrap(value).reject(&:blank?).map { |file| Rails.root.join(file) }
-      # Note: extra_files are not cached globally by default
+      # Parsed files use the shared file cache.
     end
 
     def self.default_file=(value)
@@ -49,7 +52,7 @@ module Classy
 
     # -- Cached Data Accessors (Lazy Loading) --
     def self.cached_engine_yamls
-      # Bypass cache in development and test environments
+      # Check file metadata in development and test environments
       return load_engine_yamls if Rails.env.development? || Rails.env.test?
 
       # Use cache in other environments
@@ -63,7 +66,7 @@ module Classy
     end
 
     def self.cached_default_yaml
-      # Bypass cache in development and test environments
+      # Check file metadata in development and test environments
       return load_default_yaml if Rails.env.development? || Rails.env.test?
 
       # Use cache in other environments
@@ -81,6 +84,7 @@ module Classy
       # Clear all caches when configuration changes
       @cached_engine_yamls = nil
       @cached_default_yaml = nil
+      @file_lock.synchronize { @file_cache.clear }
       # Apply tag helper override if enabled
       apply_tag_helper_override if @@override_tag_helpers
     end
@@ -106,37 +110,49 @@ module Classy
     end
 
     def self.load_engine_yamls
-      yamls = []
-      self.engine_files.each do |file_path|
-        begin
-          if File.exist?(file_path)
-            content = File.read(file_path, encoding: "UTF-8")
-            parsed_yaml = YAML.safe_load(content, permitted_classes: [ Symbol, String, Array, Hash ], aliases: true)
-            yamls << parsed_yaml if parsed_yaml && parsed_yaml.is_a?(Hash)
-          end
-        rescue Psych::SyntaxError => e
-          Rails.logger.error "Classy::Yaml: Failed to parse engine YAML file #{file_path}: #{e.message}"
-        rescue => e
-          Rails.logger.error "Classy::Yaml: Error loading engine YAML file #{file_path}: #{e.message}"
-        end
-      end
-      yamls
+      engine_files.map { |path| cached_yaml_file(path, "engine") }.compact
     end
 
     def self.load_default_yaml
-      default_path = Rails.root.join(self.default_file)
-      begin
-        if File.exist?(default_path)
-          content = File.read(default_path, encoding: "UTF-8")
-          parsed_yaml = YAML.safe_load(content, permitted_classes: [ Symbol, String, Array, Hash ], aliases: true)
-          return parsed_yaml if parsed_yaml && parsed_yaml.is_a?(Hash)
+      cached_yaml_file(default_file, "default")
+    end
+
+    # Check metadata on each access so edits do not require a Rails reload.
+    def self.cached_yaml_file(file_path, file_type)
+      @file_lock.synchronize do
+        begin
+          path = Rails.root.join(file_path).to_s
+          stat = File.stat(path)
+          signature = [ stat.mtime, stat.ctime, stat.size, stat.ino, stat.dev ]
+          cached = @file_cache[path]
+          return cached[:yaml] if cached && cached[:signature] == signature
+
+          content = File.read(path, encoding: "UTF-8")
+          parsed = YAML.safe_load(content, permitted_classes: [ Symbol, String, Array, Hash ], aliases: true)
+          yaml = parsed.is_a?(Hash) ? parsed : nil
+          @file_cache[path] = { signature: signature, yaml: yaml }
+          yaml
+        rescue Errno::ENOENT, Errno::ENOTDIR
+          @file_cache.delete(path)
+          nil
+        rescue Psych::SyntaxError => e
+          @file_cache.delete(path)
+          Rails.logger.error "Classy::Yaml: Failed to parse #{file_type} YAML file #{file_path}: #{e.message}"
+          nil
+        rescue => e
+          @file_cache.delete(path)
+          Rails.logger.error "Classy::Yaml: Error loading #{file_type} YAML file #{file_path}: #{e.message}"
+          nil
         end
-      rescue Psych::SyntaxError => e
-        Rails.logger.error "Classy::Yaml: Failed to parse default YAML file #{default_path}: #{e.message}"
-      rescue => e
-        Rails.logger.error "Classy::Yaml: Error loading default YAML file #{default_path}: #{e.message}"
       end
-      nil # Return nil if file doesn't exist or fails to load/parse
+    end
+
+    # The merger cache is mutable, so concurrent calls must use the same lock.
+    def self.merge_classes(classes)
+      @merger_lock.synchronize do
+        @merger ||= TailwindMerge::Merger.new
+        @merger.merge(classes)
+      end
     end
   end
 end

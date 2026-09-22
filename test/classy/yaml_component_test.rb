@@ -111,4 +111,11 @@ class Classy::YamlComponentTest < ViewComponent::TestCase
     assert_text "component-base-nested-class"
     assert_equal component.class_count, 1
   end
+
+  test "component lookup accepts a frozen options hash" do
+    options = { nested_base: :nested, add: "extra-class" }.freeze
+    render_inline TestComponent.new(classy: options)
+    assert_text "nested-base-class nested-class extra-class"
+    assert_equal({ nested_base: :nested, add: "extra-class" }, options)
+  end
 end

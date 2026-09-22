@@ -133,7 +133,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
     original_content = File.read(Rails.root.join("config/utility_classes.yml"))
     File.write(Rails.root.join("config/utility_classes.yml"), "single: \"modified-class\"")
 
-    # Second call should load from disk again (no caching)
+    # The changed file should replace the cached YAML.
     second_result = yass(:single)
 
     # Restore original content
@@ -268,5 +268,68 @@ class Classy::YamlTest < ActiveSupport::TestCase
     add_start_index = classes.index("first-add")
 
     assert yaml_end_index < add_start_index, "Add classes should come after yaml classes"
+  end
+
+  test "arguments can be frozen and reused without losing added classes" do
+    choices = [ :nested, :nested2 ].freeze
+    options = { nested_no_base: choices, add: "extra-class" }.freeze
+    arguments = [ options ].freeze
+
+    2.times do
+      assert_equal "nested-no-base-class nested2-class extra-class", yass(arguments)
+    end
+    assert_equal [ :nested, :nested2 ], choices
+    assert_equal "extra-class", options[:add]
+  end
+
+  test "control options do not become YAML lookup keys" do
+    keys, additions = flatten_args(values: [
+      { nested_base: :nested, skip_base: true, classy_files: [ "config/classes.yml" ], add: "px-2" }
+    ])
+
+    assert_equal [ [ "nested_base", "nested" ], [ "nested_base" ] ], keys
+    assert_equal [ "px-2" ], additions
+  end
+
+  test "deep paths keep the full parent path" do
+    keys, = flatten_args(values: [ { button: { size: :small } } ])
+    yamls = [ {
+      "button" => { "base" => "button-base", "size" => { "base" => "size-base", "small" => "small-class" } },
+      "size" => "unrelated-class"
+    } ]
+
+    assert_equal [ [ "button", "size", "small" ], [ "button", "size" ], [ "button" ] ], keys
+    assert_equal [ "size-base", "small-class", "button-base" ], fetch_classes(keys, classy_yamls: yamls)
+  end
+
+  test "added classes work without any YAML files" do
+    Classy::Yaml.default_file = "config/does-not-exist.yml"
+    assert_equal "extra-class", yass(add: "extra-class")
+  end
+
+  test "base and specific classes fall back independently" do
+    lower = { "button" => { "base" => "lower-base", "small" => "lower-small" } }
+    upper = { "button" => { "small" => "upper-small" } }
+    assert_equal [ "lower-base", "upper-small" ], fetch_classes([ [ "button", "small" ] ], classy_yamls: [ lower, upper ])
+
+    upper = { "button" => { "base" => "upper-base", "small" => "" } }
+    assert_equal [ "upper-base", "lower-small" ], fetch_classes([ [ "button", "small" ] ], classy_yamls: [ lower, upper ])
+  end
+
+  test "lookup stops when the highest priority file supplies all requested classes" do
+    lower = Object.new
+    def lower.dig(*)
+      raise "The lower priority file must not be read"
+    end
+    upper = { "button" => { "base" => "upper-base", "small" => "upper-small" } }
+    log_output = StringIO.new
+    original_logger = Rails.logger
+    Rails.logger = Logger.new(log_output)
+
+    assert_equal [ "upper-base", "upper-small" ], fetch_classes([ [ "button", "small" ] ], classy_yamls: [ lower, upper ])
+    assert_equal [ "upper-small" ], fetch_classes([ [ "button", "small" ] ], classy_yamls: [ lower, upper ], skip_base: true)
+    assert_empty log_output.string
+  ensure
+    Rails.logger = original_logger
   end
 end

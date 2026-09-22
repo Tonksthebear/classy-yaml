@@ -101,6 +101,10 @@ In your views or components:
 <div class="px-4 py-2 rounded font-medium bg-blue-500 text-white hover:bg-blue-600 m-4"></div>
 ```
 
+The helper reads argument hashes and arrays without changing them. You can reuse frozen arguments across calls. The `add` option also works when no YAML file exists.
+
+Classy YAML checks component files, extra files, the default file, and engine files in that priority order. Base classes and specific classes fall back independently. Control options such as `skip_base` and `classy_files` are not YAML lookup keys.
+
 ### ViewComponent Integration
 
 Include the component helpers in your ViewComponent:
@@ -138,12 +142,20 @@ btn:
 Classy YAML detects if [tailwind_merge](https://github.com/gjtorikian/tailwind_merge) is installed and will leverage it when fetching classes with `yass`. Please read their documentation for installation and benefits.
 
 
+## Caching and development reloads
+
+Classy YAML reuses parsed YAML when file metadata has not changed. In development and tests, each call checks the default, engine, extra, and component files. Edits, additions, and deletions take effect on the next call without a restart.
+
+In production, the default and engine YAML remain cached until configuration resets or the process restarts. Extra and component files still receive metadata checks. `Classy::Yaml.setup` clears the YAML caches.
+
+When `tailwind_merge` is available, Classy YAML reuses one merger per process in all environments. A lock protects the merger cache during concurrent calls.
+
 ## Configuration Options
 
 | Option | Default | Description |
 |--------|---------|-------------|
 | `default_file` | `"config/utility_classes.yml"` | Path to the main YAML file |
-| `extra_files` | `[]` | Array of additional YAML files (highest priority) |
+| `extra_files` | `[]` | Array of additional YAML files (above default and engine files; below component files) |
 | `engine_files` | `[]` | Array of engine YAML files (lowest priority) |
 | `override_tag_helpers` | `false` | Automatically process class symbols/hashes in Rails tag helpers |
 

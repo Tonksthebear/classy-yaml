@@ -7,6 +7,8 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
     @original_default = Classy::Yaml.default_file
     @original_engines = Classy::Yaml.engine_files
     @original_extras = Classy::Yaml.extra_files
+    @original_cache_classes = Rails.application.config.cache_classes
+    Rails.application.config.cache_classes = false
     @directory = Dir.mktmpdir("classy-cache")
     @path = File.join(@directory, "classes.yml")
     Rails.env = "development"
@@ -19,6 +21,7 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
   end
 
   teardown do
+    Rails.application.config.cache_classes = @original_cache_classes
     Rails.env = @original_env
     Classy::Yaml.setup do |config|
       config.default_file = @original_default
@@ -51,8 +54,6 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
 
   test "all YAML sources reload after edits creation deletion and replacement" do
     [ "development", "test", "production" ].product([ :default, :engine, :extra, :component ]).each do |environment, source|
-      next if environment == "production" && [ :default, :engine ].include?(source)
-
       Rails.env = environment
       Classy::Yaml.setup do |config|
         config.default_file = source == :default ? @path : File.join(@directory, "missing.yml")
@@ -77,6 +78,46 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
       assert_equal "px-6", lookup.call
       File.delete(@path)
     end
+  end
+
+  test "with classes cached a parsed file is never stat'ed again in any environment" do
+    Rails.application.config.cache_classes = true
+    File.write(@path, "single: px-2\n")
+    Classy::Yaml.engine_files = [ @path ]
+    Classy::Yaml.extra_files = [ @path ]
+    [ "development", "test", "production" ].each do |environment|
+      Rails.env = environment
+      Classy::Yaml.setup { |_| }
+      assert_equal "px-2", @helper.yass(:single, classy_files: [ @path ])
+      stats = 0
+      trace = TracePoint.new(:c_call) do |event|
+        stats += 1 if event.defined_class == File.singleton_class && event.method_id == :stat
+      end
+      trace.enable do
+        3.times { assert_equal "px-2", @helper.yass(:single, classy_files: [ @path ]) }
+      end
+      assert_equal 0, stats, "#{environment}: File.stat called with classes cached"
+    end
+  end
+
+  test "with classes cached edits wait for a restart and a missing file is checked once" do
+    Rails.application.config.cache_classes = true
+    missing = File.join(@directory, "component.yml")
+    File.write(@path, "single: px-2\n")
+    Classy::Yaml.setup { |_| }
+    assert_equal "px-2", @helper.yass(:single)
+    File.write(@path, "single: px-12\n")
+    assert_equal "px-2", @helper.yass(:single)
+
+    stats = 0
+    trace = TracePoint.new(:c_call) do |event|
+      stats += 1 if event.defined_class == File.singleton_class && event.method_id == :stat
+    end
+    trace.enable { 3.times { assert_equal "px-2", @helper.yass(:single, classy_files: [ missing ]) } }
+    assert_equal 1, stats
+
+    Classy::Yaml.setup { |_| }
+    assert_equal "px-12", @helper.yass(:single)
   end
 
   test "a file in place of a component directory is treated as missing" do

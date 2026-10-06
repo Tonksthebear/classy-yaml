@@ -122,9 +122,11 @@ class Classy::YamlTest < ActiveSupport::TestCase
   end
 
   test "caching behavior in development environment" do
-    # Force development environment
+    # Force development environment, which reloads code
     original_env = Rails.env
+    original_cache_classes = Rails.application.config.cache_classes
     Rails.env = ActiveSupport::StringInquirer.new("development")
+    Rails.application.config.cache_classes = false
 
     # First call should load from disk
     first_result = yass(:single)
@@ -141,6 +143,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
 
     # Restore original environment
     Rails.env = original_env
+    Rails.application.config.cache_classes = original_cache_classes
 
     assert_equal "single-class", first_result
     assert_equal "modified-class", second_result

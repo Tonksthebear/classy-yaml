@@ -52,10 +52,10 @@ module Classy
 
     # -- Cached Data Accessors (Lazy Loading) --
     def self.cached_engine_yamls
-      # Check file metadata in development and test environments
-      return load_engine_yamls if Rails.env.development? || Rails.env.test?
+      # Check file metadata only while Rails reloads code
+      return load_engine_yamls if reloading?
 
-      # Use cache in other environments
+      # Classes are cached: parse once
       return @cached_engine_yamls if @cached_engine_yamls
 
       @load_lock.synchronize do
@@ -66,10 +66,10 @@ module Classy
     end
 
     def self.cached_default_yaml
-      # Check file metadata in development and test environments
-      return load_default_yaml if Rails.env.development? || Rails.env.test?
+      # Check file metadata only while Rails reloads code
+      return load_default_yaml if reloading?
 
-      # Use cache in other environments
+      # Classes are cached: parse once
       return @cached_default_yaml if @cached_default_yaml
 
       @load_lock.synchronize do
@@ -117,14 +117,22 @@ module Classy
       cached_yaml_file(default_file, "default")
     end
 
-    # Check metadata on each access so edits do not require a Rails reload.
+    # Edits are picked up without a restart only while Rails reloads code.
+    # With classes cached (test, production) a parsed file is never stat'ed again.
+    def self.reloading?
+      !Rails.application.config.cache_classes
+    end
+
+    # Check metadata on each access while reloading so edits do not require a restart.
     def self.cached_yaml_file(file_path, file_type)
       @file_lock.synchronize do
         begin
           path = Rails.root.join(file_path).to_s
+          cached = @file_cache[path]
+          return cached[:yaml] if cached && !reloading?
+
           stat = File.stat(path)
           signature = [ stat.mtime, stat.ctime, stat.size, stat.ino, stat.dev ]
-          cached = @file_cache[path]
           return cached[:yaml] if cached && cached[:signature] == signature
 
           content = File.read(path, encoding: "UTF-8")
@@ -133,7 +141,8 @@ module Classy
           @file_cache[path] = { signature: signature, yaml: yaml }
           yaml
         rescue Errno::ENOENT, Errno::ENOTDIR
-          @file_cache.delete(path)
+          # A missing file stays missing until the next restart when classes are cached.
+          reloading? ? @file_cache.delete(path) : @file_cache[path] = { signature: nil, yaml: nil }
           nil
         rescue Psych::SyntaxError => e
           @file_cache.delete(path)

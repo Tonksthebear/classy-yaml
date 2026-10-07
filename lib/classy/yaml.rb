@@ -68,9 +68,16 @@ module Classy
       @results.max_size
     end
 
+    # Accepts an Integer, or a String holding one (for example from ENV), of 0 or more.
+    # Integer() would truncate a Float such as -0.5 to 0, so floats are rejected.
     def self.cache_size=(value)
-      size = Integer(value)
-      raise ArgumentError, "Classy::Yaml.cache_size must be 0 or more, got #{value.inspect}" if size.negative?
+      size = case value
+      when Integer then value
+      when String then Integer(value, 10, exception: false)
+      end
+      unless size && !size.negative?
+        raise ArgumentError, "Classy::Yaml.cache_size must be an integer of 0 or more, got #{value.inspect}"
+      end
 
       @results.max_size = size
     end
@@ -129,10 +136,15 @@ module Classy
     # Stats every YAML file read so far (also missing ones) once. A change drops
     # that file and every cached result (a new generation).
     #
-    # Not ActiveSupport::FileUpdateChecker: it compares only the newest mtime, so
-    # an edit that keeps the mtime is missed, and it memoizes which files exist,
-    # so a component YAML file created later is missed. The signature here is
-    # mtime, ctime, size, inode and device of each file, and nil for a missing one.
+    # Not ActiveSupport::FileUpdateChecker, for two reasons:
+    # - It detects an edit only when the newest mtime of all watched files grows
+    #   (or the number of existing files changes). An edit that keeps the mtime,
+    #   or a replacement by an older file, is missed.
+    # - Its files and directories are fixed when it is built, but component YAML
+    #   paths are discovered at the first render, so each new path would need a
+    #   new checker.
+    # The signature here is mtime, ctime, size, inode and device of each file
+    # looked up so far, and nil for a missing one.
     def self.check_for_changes
       @file_lock.synchronize do
         return unless @check_pending

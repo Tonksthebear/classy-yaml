@@ -190,10 +190,17 @@ class Classy::YamlPerformanceTest < ActiveSupport::TestCase
   end
 
   test "cache_size must be a non-negative integer" do
-    error = assert_raises(ArgumentError) { Classy::Yaml.cache_size = -1 }
-    assert_match "must be 0 or more", error.message
-    assert_raises(ArgumentError) { Classy::Yaml.cache_size = "many" }
-    assert_equal @original_cache_size, Classy::Yaml.cache_size
+    Classy::Yaml.cache_size = 7
+    [ -1, -0.5, 2.5, 3.0, "-2", "1.5", "many", nil ].each do |invalid|
+      error = assert_raises(ArgumentError, invalid.inspect) { Classy::Yaml.cache_size = invalid }
+      assert_match "must be an integer of 0 or more", error.message
+      assert_equal 7, Classy::Yaml.cache_size, "#{invalid.inspect} changed the size"
+    end
+
+    Classy::Yaml.cache_size = "12"
+    assert_equal 12, Classy::Yaml.cache_size
+    Classy::Yaml.cache_size = 0
+    assert_equal 0, Classy::Yaml.cache_size
   end
 
   test "while reloading each request checks each YAML file once" do

@@ -11,6 +11,7 @@ module Classy
 
       config.to_prepare do
         Classy::Yaml.clear_component_files
+        Classy::Yaml.files_may_have_changed
         ApplicationController.helper(Classy::Yaml::Helpers)
       end
 

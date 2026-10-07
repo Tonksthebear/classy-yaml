@@ -6,6 +6,9 @@ module Classy
       EMPTY = [].freeze
       # Returned by walk when a key path goes through a value that is not a hash.
       INVALID = Object.new.freeze
+      # A compiled YAML array that refers to itself. 1.7.2 raised on it while
+      # normalizing classes, so using it logs a warning and skips the layer.
+      RECURSIVE = Object.new.freeze
       # Cache key markers. Hash order changes the output, so a key lists hash
       # entries in order instead of using Hash#eql?, which ignores order.
       HASH_START = Object.new.freeze
@@ -15,21 +18,24 @@ module Classy
       module_function
 
       # Returns an order-sensitive cache key for the arguments, or nil when an
-      # argument is not a plain value (its #to_s could change between calls).
+      # argument is not a plain value. Only the exact core classes qualify: a
+      # subclass can override #to_s, #each or #key? and change the result.
       def cache_key(args, tailwind)
         key = [ tailwind ]
         append_key(args, key) ? key : nil
       end
 
+      PLAIN_CLASSES = [ Symbol, String, Integer, Float, Pathname, NilClass, TrueClass, FalseClass ].to_h { |klass| [ klass, true ] }.freeze
+
       def append_key(value, key)
-        case value
-        when Symbol, String, Integer, Float, Pathname, nil, true, false
+        klass = value.class
+        if PLAIN_CLASSES.key?(klass)
           key << value
-        when Array
+        elsif klass == Array
           key << ARRAY_START
           value.each { |child| return false unless append_key(child, key) }
           key << CLOSE
-        when Hash
+        elsif klass == Hash
           key << HASH_START
           value.each { |name, child| return false unless append_key(name, key) && append_key(child, key) }
           key << CLOSE
@@ -113,6 +119,8 @@ module Classy
             clean = false
             Rails.logger.warn(Classy::Yaml::InvalidKeyError.new(data: path))
           else
+            # 1.7.2 computed the base, then the classes, and a recursive array
+            # raised in either step, which skipped the rest of this layer.
             unless skip_base || base_classes
               base_value = if value.is_a?(Hash)
                 value["base"]
@@ -121,7 +129,15 @@ module Classy
               end
               base_classes = classes_of(base_value)
             end
-            fetched_classes = classes_of(value) unless fetched_classes || value.is_a?(Hash)
+            unless fetched_classes || value.is_a?(Hash) || base_classes.equal?(RECURSIVE)
+              fetched_classes = classes_of(value)
+            end
+            if base_classes.equal?(RECURSIVE) || fetched_classes.equal?(RECURSIVE)
+              base_classes = nil if base_classes.equal?(RECURSIVE)
+              fetched_classes = nil if fetched_classes.equal?(RECURSIVE)
+              clean = false
+              Rails.logger.warn(Classy::Yaml::InvalidKeyError.new(data: path))
+            end
           end
 
           break if fetched_classes && (skip_base || base_classes)
@@ -148,7 +164,10 @@ module Classy
       end
 
       # A compiled leaf is a frozen array of classes; anything else has none.
+      # A recursive array is returned as RECURSIVE for the caller to report.
       def classes_of(value)
+        return value if value.equal?(RECURSIVE)
+
         value if value.is_a?(Array) && !value.empty?
       end
     end

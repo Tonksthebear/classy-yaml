@@ -152,6 +152,50 @@ class Classy::YamlPerformanceTest < ActiveSupport::TestCase
     assert_equal "p-2", @helper.yass(token)
   end
 
+  test "argument subclasses bypass the cache" do
+    token = Class.new(String) do
+      attr_accessor :name
+
+      def to_s
+        name
+      end
+    end.new("same")
+    token.name = "single"
+    assert_equal "px-6", @helper.yass(token)
+    token.name = "other"
+    assert_equal "p-4", @helper.yass(token)
+
+    # An indifferent hash answers key?(:add), and a plain hash with the key "add" does not.
+    File.write(@path, "add:\n  base: add-base\n  item: add-item\n")
+    Classy::Yaml.setup { |_| }
+    assert_equal "add-base add-item", @helper.yass({ "add" => :item })
+    assert_equal "add-base add-item item", @helper.yass(ActiveSupport::HashWithIndifferentAccess.new("add" => :item))
+    assert_equal "add-base add-item", @helper.yass({ "add" => :item })
+    assert_equal 1, Classy::Yaml.instance_variable_get(:@results).size, "only the plain hash call is cached"
+  end
+
+  test "a recursive YAML array logs a warning and gives no classes, as in 1.7.2" do
+    File.write(@path, "cyclic:\n  base: &cycle [*cycle]\n  item: m-2\nleaf: &leaf [*leaf]\n")
+    Classy::Yaml.setup { |_| }
+    log = StringIO.new
+    original_logger = Rails.logger
+    Rails.logger = Logger.new(log)
+
+    2.times { assert_equal "", @helper.yass(cyclic: :item) }
+    assert_equal 4, log.string.scan("yass called with invalid keys").size
+    assert_equal "", @helper.yass(:leaf)
+    assert_equal "m-2", @helper.yass(cyclic: :item, skip_base: true)
+  ensure
+    Rails.logger = original_logger
+  end
+
+  test "cache_size must be a non-negative integer" do
+    error = assert_raises(ArgumentError) { Classy::Yaml.cache_size = -1 }
+    assert_match "must be 0 or more", error.message
+    assert_raises(ArgumentError) { Classy::Yaml.cache_size = "many" }
+    assert_equal @original_cache_size, Classy::Yaml.cache_size
+  end
+
   test "while reloading each request checks each YAML file once" do
     Rails.application.config.cache_classes = false
     lookup = -> { @helper.yass(:single, nested: :item, classy_files: [ @component_path ]) }
@@ -168,10 +212,29 @@ class Classy::YamlPerformanceTest < ActiveSupport::TestCase
     assert_equal 0, stats, "no File.stat between requests"
   end
 
-  test "with classes cached a request checks no files" do
+  test "while reloading a console reload! or a to_prepare run picks up edits" do
+    Rails.application.config.cache_classes = false
+    assert_equal "px-6", request { @helper.yass(:single) }
+
+    File.write(@component_path, "single: px-12\n")
+    assert_equal "px-6", @helper.yass(:single), "no check outside a request"
+    Thread.new { Rails.application.reloader.reload! }.join
+    assert_equal "px-12", @helper.yass(:single)
+
+    File.write(@component_path, "single: px-14\n")
+    Rails.application.reloader.prepare!
+    assert_equal "px-14", @helper.yass(:single)
+  end
+
+  test "with classes cached a request, a job and a reload check no files" do
     assert_equal "px-6", @helper.yass(:single)
     File.write(@component_path, "single: px-12\n")
-    stats = count_stats { assert_equal "px-6", request { @helper.yass(:single) } }
+    stats = count_stats do
+      assert_equal "px-6", request { @helper.yass(:single) }
+      assert_equal "px-6", Thread.new { Rails.application.reloader.wrap { @helper.yass(:single) } }.value
+      Rails.application.reloader.prepare!
+      assert_equal "px-6", @helper.yass(:single)
+    end
     assert_equal 0, stats
   end
 

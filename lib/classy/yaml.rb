@@ -69,7 +69,10 @@ module Classy
     end
 
     def self.cache_size=(value)
-      @results.max_size = Integer(value)
+      size = Integer(value)
+      raise ArgumentError, "Classy::Yaml.cache_size must be 0 or more, got #{value.inspect}" if size.negative?
+
+      @results.max_size = size
     end
 
     # Increases on every configuration change and every YAML file change.
@@ -115,14 +118,21 @@ module Classy
       @merger_lock.synchronize { @merger ||= TailwindMerge::Merger.new } if tailwind_merge_available?
     end
 
-    # Called at the start of each request or job (the Rails executor). While
-    # Rails reloads code, the next lookup compares each YAML file it has read.
+    # Called at the start of each request or job (the Rails executor) and after
+    # each code reload (to_prepare, which also covers `reload!` in a console).
+    # While Rails reloads code, the next lookup compares each YAML file it has
+    # read. With classes cached it does nothing, so no file is ever checked.
     def self.files_may_have_changed
       @check_pending = true if reloading?
     end
 
     # Stats every YAML file read so far (also missing ones) once. A change drops
-    # that file and every cached result.
+    # that file and every cached result (a new generation).
+    #
+    # Not ActiveSupport::FileUpdateChecker: it compares only the newest mtime, so
+    # an edit that keeps the mtime is missed, and it memoizes which files exist,
+    # so a component YAML file created later is missed. The signature here is
+    # mtime, ctime, size, inode and device of each file, and nil for a missing one.
     def self.check_for_changes
       @file_lock.synchronize do
         return unless @check_pending
@@ -236,8 +246,8 @@ module Classy
         begin
           value.flatten.map(&:to_s).reject(&:blank?).each(&:freeze).freeze
         rescue ArgumentError
-          # A recursive array has no classes, and a path through it is invalid.
-          Lookup::INVALID
+          # flatten raises on a recursive array; lookups report it as 1.7.2 did.
+          Lookup::RECURSIVE
         end
       else
         value

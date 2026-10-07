@@ -60,23 +60,31 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
         config.engine_files = source == :engine ? [ @path ] : []
         config.extra_files = source == :extra ? [ @path ] : []
       end
-      # While Rails reloads code, edits are picked up at the next request.
+      # While Rails reloads code, edits are picked up at the next request, and
+      # each detected change starts a new generation of the result cache.
+      assert_predicate Classy::Yaml.cache_size, :positive?
       lookup = -> { request { @helper.yass(:single, classy_files: source == :component ? [ @path ] : []) } }
+      change = lambda do |expected, &edit|
+        generation = Classy::Yaml.generation
+        edit.call
+        assert_equal expected, lookup.call, "#{environment} #{source}"
+        assert_operator Classy::Yaml.generation, :>, generation, "#{environment} #{source}: #{expected.inspect}"
+        assert_equal expected, lookup.call
+      end
       assert_equal "", lookup.call
-      File.write(@path, "single: px-2\n")
-      assert_equal "px-2", lookup.call
+      change.call("px-2") { File.write(@path, "single: px-2\n") }
       old_mtime = File.mtime(@path)
-      File.write(@path, "single: px-12\n")
-      File.utime(old_mtime, old_mtime, @path)
-      assert_equal "px-12", lookup.call
-      replacement = File.join(@directory, "replacement.yml")
-      File.write(replacement, "single: px-8\n")
-      File.rename(replacement, @path)
-      assert_equal "px-8", lookup.call
-      File.delete(@path)
-      assert_equal "", lookup.call
-      File.write(@path, "single: px-6\n")
-      assert_equal "px-6", lookup.call
+      change.call("px-12") do
+        File.write(@path, "single: px-12\n")
+        File.utime(old_mtime, old_mtime, @path)
+      end
+      change.call("px-8") do
+        replacement = File.join(@directory, "replacement.yml")
+        File.write(replacement, "single: px-8\n")
+        File.rename(replacement, @path)
+      end
+      change.call("") { File.delete(@path) }
+      change.call("px-6") { File.write(@path, "single: px-6\n") }
       File.delete(@path)
     end
   end

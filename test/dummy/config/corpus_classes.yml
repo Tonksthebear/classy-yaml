@@ -1,0 +1,43 @@
+# Edge cases for the yass output corpus (test/support/yass_corpus.rb).
+single: "corpus-single  px-2 "
+integer_leaf: 5
+boolean_leaf: true
+empty_leaf: ""
+blank_leaf: "   "
+nil_leaf:
+symbol_leaf: :sym
+array_nested: [ "a-1", [ "a-2", "a-3" ], "", 7 ]
+# A hash inside an array is left out: its to_s differs between Ruby 3.3 and 3.4.
+hash_in_array:
+  - 3.5
+  - "plain"
+  - [ "x" ]
+  - - :sym
+base_hash:
+  base:
+    inner: "x"
+  nested: "base-hash-nested"
+base_array:
+  base: [ "ba-1", "ba-2" ]
+  nested: [ "bn-1", "ba-1" ]
+  empty: ""
+  deep:
+    base: "deep-base"
+    leaf: "deep-leaf"
+    deeper:
+      bottom: "bottom-class"
+nested_base:
+  nested: "corpus-nested-override"
+  extra: "corpus-nested-extra"
+1: "numeric-key"
+"true": "string-true-key"
+anchors: &anchor
+  base: "anchor-base"
+  item: "anchor-item"
+alias_use: *anchor
+conflict:
+  base: "p-2 px-4"
+  small: "p-1"
+  large: "p-8 m-2"
+tw: "px-2 py-1 bg-red-500"
+tw_override: "px-4 bg-blue-500"

@@ -129,14 +129,14 @@ class Classy::YamlTest < ActiveSupport::TestCase
     Rails.application.config.cache_classes = false
 
     # First call should load from disk
-    first_result = yass(:single)
+    first_result = Thread.new { Rails.application.executor.wrap { yass(:single) } }.value
 
     # Modify the YAML file
     original_content = File.read(Rails.root.join("config/utility_classes.yml"))
     File.write(Rails.root.join("config/utility_classes.yml"), "single: \"modified-class\"")
 
-    # The changed file should replace the cached YAML.
-    second_result = yass(:single)
+    # The next request should replace the cached YAML.
+    second_result = Thread.new { Rails.application.executor.wrap { yass(:single) } }.value
 
     # Restore original content
     File.write(Rails.root.join("config/utility_classes.yml"), original_content)
@@ -286,7 +286,7 @@ class Classy::YamlTest < ActiveSupport::TestCase
   end
 
   test "control options do not become YAML lookup keys" do
-    keys, additions = flatten_args(values: [
+    keys, additions = collect_keys([
       { nested_base: :nested, skip_base: true, classy_files: [ "config/classes.yml" ], add: "px-2" }
     ])
 
@@ -295,14 +295,14 @@ class Classy::YamlTest < ActiveSupport::TestCase
   end
 
   test "deep paths keep the full parent path" do
-    keys, = flatten_args(values: [ { button: { size: :small } } ])
+    keys, = collect_keys([ { button: { size: :small } } ])
     yamls = [ {
       "button" => { "base" => "button-base", "size" => { "base" => "size-base", "small" => "small-class" } },
       "size" => "unrelated-class"
     } ]
 
     assert_equal [ [ "button", "size", "small" ], [ "button", "size" ], [ "button" ] ], keys
-    assert_equal [ "size-base", "small-class", "button-base" ], fetch_classes(keys, classy_yamls: yamls)
+    assert_equal [ "size-base", "small-class", "button-base" ], resolve_classes(keys, yamls)
   end
 
   test "added classes work without any YAML files" do
@@ -313,26 +313,43 @@ class Classy::YamlTest < ActiveSupport::TestCase
   test "base and specific classes fall back independently" do
     lower = { "button" => { "base" => "lower-base", "small" => "lower-small" } }
     upper = { "button" => { "small" => "upper-small" } }
-    assert_equal [ "lower-base", "upper-small" ], fetch_classes([ [ "button", "small" ] ], classy_yamls: [ lower, upper ])
+    assert_equal [ "lower-base", "upper-small" ], resolve_classes([ [ "button", "small" ] ], [ lower, upper ])
 
     upper = { "button" => { "base" => "upper-base", "small" => "" } }
-    assert_equal [ "upper-base", "lower-small" ], fetch_classes([ [ "button", "small" ] ], classy_yamls: [ lower, upper ])
+    assert_equal [ "upper-base", "lower-small" ], resolve_classes([ [ "button", "small" ] ], [ lower, upper ])
   end
 
   test "lookup stops when the highest priority file supplies all requested classes" do
-    lower = Object.new
-    def lower.dig(*)
-      raise "The lower priority file must not be read"
-    end
-    upper = { "button" => { "base" => "upper-base", "small" => "upper-small" } }
+    lower = Class.new(Hash) do
+      def [](*)
+        raise "The lower priority file must not be read"
+      end
+    end.new
+    upper = Classy::Yaml.compile({ "button" => { "base" => "upper-base", "small" => "upper-small" } })
     log_output = StringIO.new
     original_logger = Rails.logger
     Rails.logger = Logger.new(log_output)
 
-    assert_equal [ "upper-base", "upper-small" ], fetch_classes([ [ "button", "small" ] ], classy_yamls: [ lower, upper ])
-    assert_equal [ "upper-small" ], fetch_classes([ [ "button", "small" ] ], classy_yamls: [ lower, upper ], skip_base: true)
+    assert_equal [ "upper-base", "upper-small" ], resolve_classes([ [ "button", "small" ] ], [ lower, upper ], compile: false)
+    assert_equal [ "upper-small" ], resolve_classes([ [ "button", "small" ] ], [ lower, upper ], skip_base: true, compile: false)
     assert_empty log_output.string
   ensure
     Rails.logger = original_logger
+  end
+
+  private
+
+  def collect_keys(args)
+    keys = []
+    additions = []
+    Classy::Yaml::Lookup.collect_list(args, Classy::Yaml::Lookup::EMPTY, keys, additions)
+    [ keys, additions ]
+  end
+
+  def resolve_classes(keys, yamls, skip_base: false, compile: true)
+    layers = compile ? yamls.map { |yaml| Classy::Yaml.compile(yaml) } : yamls
+    classes = []
+    Classy::Yaml::Lookup.resolve(keys, layers, skip_base, classes)
+    classes.uniq
   end
 end

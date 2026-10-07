@@ -60,22 +60,31 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
         config.engine_files = source == :engine ? [ @path ] : []
         config.extra_files = source == :extra ? [ @path ] : []
       end
-      lookup = -> { @helper.yass(:single, classy_files: source == :component ? [ @path ] : []) }
+      # While Rails reloads code, edits are picked up at the next request, and
+      # each detected change starts a new generation of the result cache.
+      assert_predicate Classy::Yaml.cache_size, :positive?
+      lookup = -> { request { @helper.yass(:single, classy_files: source == :component ? [ @path ] : []) } }
+      change = lambda do |expected, &edit|
+        generation = Classy::Yaml.generation
+        edit.call
+        assert_equal expected, lookup.call, "#{environment} #{source}"
+        assert_operator Classy::Yaml.generation, :>, generation, "#{environment} #{source}: #{expected.inspect}"
+        assert_equal expected, lookup.call
+      end
       assert_equal "", lookup.call
-      File.write(@path, "single: px-2\n")
-      assert_equal "px-2", lookup.call
+      change.call("px-2") { File.write(@path, "single: px-2\n") }
       old_mtime = File.mtime(@path)
-      File.write(@path, "single: px-12\n")
-      File.utime(old_mtime, old_mtime, @path)
-      assert_equal "px-12", lookup.call
-      replacement = File.join(@directory, "replacement.yml")
-      File.write(replacement, "single: px-8\n")
-      File.rename(replacement, @path)
-      assert_equal "px-8", lookup.call
-      File.delete(@path)
-      assert_equal "", lookup.call
-      File.write(@path, "single: px-6\n")
-      assert_equal "px-6", lookup.call
+      change.call("px-12") do
+        File.write(@path, "single: px-12\n")
+        File.utime(old_mtime, old_mtime, @path)
+      end
+      change.call("px-8") do
+        replacement = File.join(@directory, "replacement.yml")
+        File.write(replacement, "single: px-8\n")
+        File.rename(replacement, @path)
+      end
+      change.call("") { File.delete(@path) }
+      change.call("px-6") { File.write(@path, "single: px-6\n") }
       File.delete(@path)
     end
   end
@@ -136,11 +145,11 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
 
   test "invalid YAML does not retain old classes and can be repaired" do
     File.write(@path, "single: px-2\n")
-    assert_equal "px-2", @helper.yass(:single)
+    assert_equal "px-2", request { @helper.yass(:single) }
     File.write(@path, "single: [\n")
-    assert_equal "", @helper.yass(:single)
+    assert_equal "", request { @helper.yass(:single) }
     File.write(@path, "single: px-4\n")
-    assert_equal "px-4", @helper.yass(:single)
+    assert_equal "px-4", request { @helper.yass(:single) }
   end
 
   test "helpers reuse the merger cache across concurrent calls" do
@@ -160,5 +169,12 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
     end
     assert_equal [ "px-4" ] * 40, results
     assert_equal 0, constructions
+  end
+
+  private
+
+  # Runs the block as a request does: inside a fresh Rails executor on its own thread.
+  def request(&block)
+    Thread.new { Rails.application.executor.wrap(&block) }.value
   end
 end

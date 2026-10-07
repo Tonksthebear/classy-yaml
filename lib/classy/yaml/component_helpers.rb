@@ -2,19 +2,12 @@ module Classy
   module Yaml
     module ComponentHelpers
       def yass(*args)
-        source_file = Object.const_source_location(self.class.name).first
-        calling_path = File.dirname(source_file)
-        calling_file = File.basename(source_file).split(".").first
-        component_name = self.class.name.underscore.split("/").last.split(".").first
-
-        classy_files = [ "#{calling_path}/#{component_name}.yml",
-                        "#{calling_path}/#{calling_file}/#{calling_file}.yml",
-                        "#{calling_path}/#{calling_file}/#{component_name}.yml" ]
+        classy_files = Classy::Yaml.component_classy_files(self.class)
 
         if args.first.is_a?(Hash)
-          args[0] = args.first.merge(classy_files: classy_files.uniq)
+          args[0] = args.first.merge(classy_files: classy_files)
         else
-          args << { classy_files: classy_files.uniq }
+          args << { classy_files: classy_files }
         end
 
         helpers.yass(*args)

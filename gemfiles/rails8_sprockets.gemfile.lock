@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    classy-yaml (1.7.2)
+    classy-yaml (1.7.3)
       actionpack (>= 6)
       activesupport (>= 6)
       railties (>= 6)

@@ -1,0 +1,2 @@
+# Invalid YAML on purpose: the yass corpus checks that a broken file is skipped.
+single: [

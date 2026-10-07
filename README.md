@@ -144,11 +144,14 @@ Classy YAML detects if [tailwind_merge](https://github.com/gjtorikian/tailwind_m
 
 ## Caching and development reloads
 
-Classy YAML reuses parsed YAML when file metadata has not changed. In development and tests, each call checks the default, engine, extra, and component files. Edits, additions, and deletions take effect on the next call without a restart.
+Classy YAML needs no configuration for its caches. The railtie chooses their behavior from `Rails.application.config.cache_classes`.
 
-In production, the default and engine YAML remain cached until configuration resets or the process restarts. Extra and component files still receive metadata checks. `Classy::Yaml.setup` clears the YAML caches.
+- **Results.** `yass` remembers the result for each set of arguments (including `add:`, `skip_base:` and `classy_files:`) in a bounded least-recently-used cache of `Classy::Yaml.cache_size` entries (5,000 by default). A repeated call does no YAML lookup and no class merge. A call that logs an invalid key warning is not cached, so the warning appears on every call. Set `Classy::Yaml.cache_size = 0` to turn the result cache off.
+- **YAML files.** Each file is parsed once and compiled to frozen lookup data. A missing or invalid file is also remembered.
+- **Classes cached (test, production).** Classy YAML never checks the files again. Edits take effect after a restart or `Classy::Yaml.setup`. At boot, Classy YAML parses the default, engine, and extra files and builds the `tailwind_merge` merger, so forked workers (Puma `preload_app!`, parallel tests) share them.
+- **Classes reloaded (development).** At the start of each request or job (the Rails executor), Classy YAML marks its files for a check. The next `yass` call checks each YAML file it has read once, including missing component files. An edit, addition, deletion, or replacement takes effect on the next request. Outside the executor, for example in a console, call `reload!`.
 
-When `tailwind_merge` is available, Classy YAML reuses one merger per process in all environments. A lock protects the merger cache during concurrent calls.
+`Classy::Yaml.setup` and the file setters clear all caches. When `tailwind_merge` is available, Classy YAML reuses one merger per process in all environments. A lock protects the merger cache during concurrent calls.
 
 ## Configuration Options
 
@@ -158,6 +161,7 @@ When `tailwind_merge` is available, Classy YAML reuses one merger per process in
 | `extra_files` | `[]` | Array of additional YAML files (above default and engine files; below component files) |
 | `engine_files` | `[]` | Array of engine YAML files (lowest priority) |
 | `override_tag_helpers` | `false` | Automatically process class symbols/hashes in Rails tag helpers |
+| `cache_size` | `5000` | Maximum number of cached `yass` results; `0` turns the result cache off |
 
 ## Contributing
 

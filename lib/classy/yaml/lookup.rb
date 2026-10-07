@@ -25,17 +25,23 @@ module Classy
         append_key(args, key) ? key : nil
       end
 
-      PLAIN_CLASSES = [ Symbol, String, Integer, Float, Pathname, NilClass, TrueClass, FalseClass ].to_h { |klass| [ klass, true ] }.freeze
-
       def append_key(value, key)
-        klass = value.class
-        if PLAIN_CLASSES.key?(klass)
+        case value
+        when Symbol, Integer, Float, nil, true, false
           key << value
-        elsif klass == Array
+        when String, Pathname
+          return false unless value.instance_of?(String) || value.instance_of?(Pathname)
+
+          key << value
+        when Array
+          return false unless value.instance_of?(Array)
+
           key << ARRAY_START
           value.each { |child| return false unless append_key(child, key) }
           key << CLOSE
-        elsif klass == Hash
+        when Hash
+          return false unless value.instance_of?(Hash)
+
           key << HASH_START
           value.each { |name, child| return false unless append_key(name, key) && append_key(child, key) }
           key << CLOSE

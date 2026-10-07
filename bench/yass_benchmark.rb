@@ -3,7 +3,7 @@
 #   BUNDLE_GEMFILE=gemfiles/rails8_propshaft.gemfile bundle exec ruby --yjit --yjit-stats=quiet bench/yass_benchmark.rb
 #
 # A "request" is 800 yass calls drawn from 200 distinct argument shapes of the
-# test corpus, close to the 791 calls of a HyperFlex Reports preview request.
+# test corpus, close to the yass calls of one large page in a real app.
 # Scenarios: warning-free shapes (the common page), the same with the result
 # cache off (the uncached lookup path), a new add: value on every call (every
 # call misses), shapes that log invalid key warnings, and Rails reloading code.

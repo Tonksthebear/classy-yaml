@@ -15,8 +15,20 @@ class Classy::YamlCorpusTest < ActiveSupport::TestCase
   end
 
   test "yass output is byte-identical to the 1.7.2 golden corpus" do
-    actual = YassCorpus.record
+    assert_matches_golden YassCorpus.record
+  end
 
+  test "yass output without the result cache is byte-identical to the 1.7.2 golden corpus" do
+    original_size = Classy::Yaml.cache_size
+    Classy::Yaml.cache_size = 0
+    assert_matches_golden YassCorpus.record
+  ensure
+    Classy::Yaml.cache_size = original_size
+  end
+
+  private
+
+  def assert_matches_golden(actual)
     assert_equal "1.7.2", @golden["version"]
     assert_equal @golden["args"], actual["args"], "The corpus generator changed; the golden file no longer matches it"
     @golden["results"].each do |run, expected|

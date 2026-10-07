@@ -60,7 +60,8 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
         config.engine_files = source == :engine ? [ @path ] : []
         config.extra_files = source == :extra ? [ @path ] : []
       end
-      lookup = -> { @helper.yass(:single, classy_files: source == :component ? [ @path ] : []) }
+      # While Rails reloads code, edits are picked up at the next request.
+      lookup = -> { request { @helper.yass(:single, classy_files: source == :component ? [ @path ] : []) } }
       assert_equal "", lookup.call
       File.write(@path, "single: px-2\n")
       assert_equal "px-2", lookup.call
@@ -136,11 +137,11 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
 
   test "invalid YAML does not retain old classes and can be repaired" do
     File.write(@path, "single: px-2\n")
-    assert_equal "px-2", @helper.yass(:single)
+    assert_equal "px-2", request { @helper.yass(:single) }
     File.write(@path, "single: [\n")
-    assert_equal "", @helper.yass(:single)
+    assert_equal "", request { @helper.yass(:single) }
     File.write(@path, "single: px-4\n")
-    assert_equal "px-4", @helper.yass(:single)
+    assert_equal "px-4", request { @helper.yass(:single) }
   end
 
   test "helpers reuse the merger cache across concurrent calls" do
@@ -160,5 +161,12 @@ class Classy::YamlCacheTest < ActiveSupport::TestCase
     end
     assert_equal [ "px-4" ] * 40, results
     assert_equal 0, constructions
+  end
+
+  private
+
+  # Runs the block as a request does: inside a fresh Rails executor on its own thread.
+  def request(&block)
+    Thread.new { Rails.application.executor.wrap(&block) }.value
   end
 end

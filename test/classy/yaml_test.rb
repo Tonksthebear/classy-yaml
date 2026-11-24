@@ -12,8 +12,12 @@ class Classy::YamlTest < ActiveSupport::TestCase
   end
 
   teardown do
-    # Reset configuration to default state after each test
+    # Reset configuration to default state after each test, so a test that changes a file setting
+    # does not leak it into a later test class.
     Classy::Yaml.setup do |config|
+      config.default_file = "config/utility_classes.yml"
+      config.extra_files = []
+      config.engine_files = []
       config.override_tag_helpers = false
     end
   end

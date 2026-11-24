@@ -1,0 +1,4 @@
+# An extra file: above the default file.
+card:
+  footer: "border-t-2 px-6"
+  base: "rounded-xl bg-gray-50 p-6"

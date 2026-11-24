@@ -1,0 +1,27 @@
+# The gem's pool job (jobq refuses unknown keys). jobq runs the caller's command under `mise exec --`
+# after `mise install` of mise.toml, for example:
+#   jobq run --needs linux --dirty -- bin/pool-job bundle exec rake test
+# GitHub Actions CI does not use this file.
+
+# bin/pool-job downloads gems from rubygems.org, PHP from static-php.dev, Composer from getcomposer.org
+# and the Composer packages.
+[network]
+gate = "bridge"
+
+# rw, not exclusive: bin/pool-job serializes each install under a lock. Keyed on the lockfile of BUNDLE_GEMFILE.
+[[caches]]
+name = "bundle"
+path = "/cache/bundle"
+key = ["gemfiles/rails8_propshaft.gemfile.lock"]
+mode = "rw"
+
+[environment]
+# The task's /tmp is a noexec tmpfs.
+TMPDIR = "/alloc/tmp"
+BUNDLE_PATH = "/cache/bundle"
+# The dummy app needs Rails and an asset pipeline, which only the Appraisal gemfiles bring (as in GitHub Actions CI);
+# the root Gemfile alone cannot boot it.
+BUNDLE_GEMFILE = "gemfiles/rails8_propshaft.gemfile"
+# A Ruby that installs on the pool, in place of mise.toml's local version.
+MISE_RUBY_VERSION = "3.4.2"
+CI = "true"

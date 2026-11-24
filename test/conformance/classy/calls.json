@@ -1,0 +1,2069 @@
+{
+ "suites": {
+  "fixture": {
+   "engine_files": [
+    "layers/engine.yml"
+   ],
+   "default_file": "layers/default.yml",
+   "extra_files": [
+    "layers/extra.yml"
+   ],
+   "calls": [
+    {
+     "name": "leaf string",
+     "args": [
+      "string_root"
+     ]
+    },
+    {
+     "name": "hash root leaf with base",
+     "args": [
+      {
+       "btn": "base"
+      }
+     ]
+    },
+    {
+     "name": "size with base from parent",
+     "args": [
+      {
+       "btn": {
+        "md": "rounded"
+       }
+      }
+     ]
+    },
+    {
+     "name": "nested list of keys",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "default overrides engine",
+     "args": [
+      {
+       "btn": {
+        "primary": "solid"
+       }
+      }
+     ]
+    },
+    {
+     "name": "engine value kept where default has none",
+     "args": [
+      {
+       "btn": {
+        "primary": "soft"
+       }
+      }
+     ]
+    },
+    {
+     "name": "extra overrides default and engine base",
+     "args": [
+      {
+       "card": "footer"
+      }
+     ]
+    },
+    {
+     "name": "hash value gives only its base",
+     "args": [
+      "card"
+     ]
+    },
+    {
+     "name": "component file overrides all",
+     "args": [
+      {
+       "card": "header",
+       "classy_files": [
+        "layers/component.yml"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "component-only key",
+     "args": [
+      {
+       "widget": "icon",
+       "classy_files": [
+        "layers/component.yml"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "component files given as a second argument",
+     "args": [
+      {
+       "card": "header"
+      },
+      {
+       "classy_files": [
+        "layers/component.yml"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "skip_base true",
+     "args": [
+      {
+       "btn": {
+        "md": "rounded"
+       },
+       "skip_base": true
+      }
+     ]
+    },
+    {
+     "name": "skip_base false keeps base",
+     "args": [
+      {
+       "btn": {
+        "md": "rounded"
+       },
+       "skip_base": false
+      }
+     ]
+    },
+    {
+     "name": "skip_base in a second hash",
+     "args": [
+      {
+       "btn": {
+        "md": "rounded"
+       }
+      },
+      {
+       "skip_base": true
+      }
+     ]
+    },
+    {
+     "name": "add string",
+     "args": [
+      {
+       "btn": "base",
+       "add": "mt-4 px-8"
+      }
+     ]
+    },
+    {
+     "name": "add list",
+     "args": [
+      {
+       "card": "header",
+       "add": [
+        "shadow-sm",
+        [
+         "ring-1"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "name": "add only",
+     "args": [
+      {
+       "add": "p-1"
+      }
+     ]
+    },
+    {
+     "name": "nested add",
+     "args": [
+      {
+       "btn": {
+        "md": "base",
+        "add": "px-9"
+       }
+      }
+     ]
+    },
+    {
+     "name": "list leaf flattened",
+     "args": [
+      "list"
+     ]
+    },
+    {
+     "name": "anchor merge key",
+     "args": [
+      {
+       "merged": "tone"
+      }
+     ]
+    },
+    {
+     "name": "anchor merge key own key",
+     "args": [
+      {
+       "merged": "extra"
+      }
+     ]
+    },
+    {
+     "name": "alias copy",
+     "args": [
+      {
+       "alias_copy": "tone"
+      }
+     ]
+    },
+    {
+     "name": "deep path base from parent only",
+     "args": [
+      {
+       "nested": {
+        "a": {
+         "b": "c"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "deep parent keys",
+     "args": [
+      {
+       "nested": {
+        "a": "b"
+       }
+      }
+     ]
+    },
+    {
+     "name": "multiple top-level args",
+     "args": [
+      "host_only",
+      "string_root",
+      {
+       "btn": "base"
+      }
+     ]
+    },
+    {
+     "name": "duplicate keys deduplicated",
+     "args": [
+      "host_only",
+      "host_only"
+     ]
+    },
+    {
+     "name": "missing key",
+     "args": [
+      "does_not_exist"
+     ]
+    },
+    {
+     "name": "missing nested key",
+     "args": [
+      {
+       "btn": {
+        "huge": "solid"
+       }
+      }
+     ]
+    },
+    {
+     "name": "empty string leaf",
+     "args": [
+      "empty"
+     ]
+    },
+    {
+     "name": "empty list leaf",
+     "args": [
+      "blank_list"
+     ]
+    },
+    {
+     "name": "number leaf gives nothing",
+     "args": [
+      "number_leaf"
+     ]
+    },
+    {
+     "name": "boolean leaf gives nothing",
+     "args": [
+      "bool_leaf"
+     ]
+    },
+    {
+     "name": "invalid path through a string warns",
+     "args": [
+      {
+       "string_root": "child"
+      }
+     ]
+    },
+    {
+     "name": "invalid path through a list warns",
+     "args": [
+      {
+       "list": "child"
+      }
+     ]
+    },
+    {
+     "name": "invalid deep path",
+     "args": [
+      {
+       "host_only": {
+        "a": "b"
+       }
+      }
+     ]
+    },
+    {
+     "name": "tailwind conflict across layers",
+     "args": [
+      {
+       "card": [
+        "base",
+        "footer"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "conflict between base and variant",
+     "args": [
+      {
+       "btn": [
+        {
+         "md": "rounded"
+        },
+        {
+         "md": "base"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "hash key order changes the output",
+     "args": [
+      {
+       "btn": [
+        {
+         "primary": "solid"
+        },
+        {
+         "md": "base"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "empty call",
+     "args": []
+    },
+    {
+     "name": "empty list arg",
+     "args": [
+      []
+     ]
+    },
+    {
+     "name": "nil segment",
+     "args": [
+      null
+     ]
+    },
+    {
+     "name": "true segment",
+     "args": [
+      true
+     ]
+    },
+    {
+     "name": "integer segment",
+     "args": [
+      12
+     ]
+    }
+   ]
+  },
+  "components": {
+   "engine_files": [
+    "components/engine.yml"
+   ],
+   "default_file": "components/utility_classes.yml",
+   "extra_files": [],
+   "calls": [
+    {
+     "name": "btn md primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md primary soft",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "primary": "soft"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md primary outline",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "primary": "outline"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md primary ghost",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "primary": "ghost"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md secondary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "secondary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md secondary soft",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "secondary": "soft"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md secondary outline",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "secondary": "outline"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md secondary ghost",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "secondary": "ghost"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md neutral solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "neutral": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md neutral soft",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "neutral": "soft"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md neutral outline",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "neutral": "outline"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md neutral ghost",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "neutral": "ghost"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md warning solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "warning": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md warning soft",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "warning": "soft"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md warning outline",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "warning": "outline"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md warning ghost",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "warning": "ghost"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md danger solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "danger": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md danger soft",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "danger": "soft"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md danger outline",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "danger": "outline"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md danger ghost",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "danger": "ghost"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn xs base primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "xs": "base"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn xs rounded primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "xs": "rounded"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn xs circular primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "xs": "circular"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn sm base primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "sm": "base"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn sm rounded primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "sm": "rounded"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn sm circular primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "sm": "circular"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md base primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "base"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md rounded primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "rounded"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn md circular primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "md": "circular"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn lg base primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "lg": "base"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn lg rounded primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "lg": "rounded"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn lg circular primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "lg": "circular"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn xl base primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "xl": "base"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn xl rounded primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "xl": "rounded"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "btn xl circular primary solid",
+     "args": [
+      {
+       "btn": [
+        "base",
+        {
+         "xl": "circular"
+        },
+        {
+         "primary": "solid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "select container",
+     "args": [
+      {
+       "select": "container"
+      }
+     ]
+    },
+    {
+     "name": "select group",
+     "args": [
+      {
+       "select": "group"
+      }
+     ]
+    },
+    {
+     "name": "select default button",
+     "args": [
+      {
+       "select": {
+        "default": "button"
+       }
+      }
+     ]
+    },
+    {
+     "name": "select default selected",
+     "args": [
+      {
+       "select": {
+        "default": "selected"
+       }
+      }
+     ]
+    },
+    {
+     "name": "select default icon",
+     "args": [
+      {
+       "select": {
+        "default": "icon"
+       }
+      }
+     ]
+    },
+    {
+     "name": "select default menu",
+     "args": [
+      {
+       "select": {
+        "default": "menu"
+       }
+      }
+     ]
+    },
+    {
+     "name": "select default option label",
+     "args": [
+      {
+       "select": {
+        "default": {
+         "option": "label"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "select default option container",
+     "args": [
+      {
+       "select": {
+        "default": {
+         "option": "container"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "select default option check",
+     "args": [
+      {
+       "select": {
+        "default": {
+         "option": "check"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "select primary button",
+     "args": [
+      {
+       "select": {
+        "primary": "button"
+       }
+      }
+     ]
+    },
+    {
+     "name": "select primary selected",
+     "args": [
+      {
+       "select": {
+        "primary": "selected"
+       }
+      }
+     ]
+    },
+    {
+     "name": "select primary icon",
+     "args": [
+      {
+       "select": {
+        "primary": "icon"
+       }
+      }
+     ]
+    },
+    {
+     "name": "select primary menu",
+     "args": [
+      {
+       "select": {
+        "primary": "menu"
+       }
+      }
+     ]
+    },
+    {
+     "name": "select primary option label",
+     "args": [
+      {
+       "select": {
+        "primary": {
+         "option": "label"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "select primary option container",
+     "args": [
+      {
+       "select": {
+        "primary": {
+         "option": "container"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "select primary option check",
+     "args": [
+      {
+       "select": {
+        "primary": {
+         "option": "check"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog main",
+     "args": [
+      {
+       "dialog": "main"
+      }
+     ]
+    },
+    {
+     "name": "dialog backdrop",
+     "args": [
+      {
+       "dialog": "backdrop"
+      }
+     ]
+    },
+    {
+     "name": "dialog title",
+     "args": [
+      {
+       "dialog": "title"
+      }
+     ]
+    },
+    {
+     "name": "dialog description",
+     "args": [
+      {
+       "dialog": "description"
+      }
+     ]
+    },
+    {
+     "name": "dialog dismiss",
+     "args": [
+      {
+       "dialog": "dismiss"
+      }
+     ]
+    },
+    {
+     "name": "dialog header",
+     "args": [
+      {
+       "dialog": "header"
+      }
+     ]
+    },
+    {
+     "name": "dialog body",
+     "args": [
+      {
+       "dialog": "body"
+      }
+     ]
+    },
+    {
+     "name": "dialog footer",
+     "args": [
+      {
+       "dialog": "footer"
+      }
+     ]
+    },
+    {
+     "name": "dialog sheet_handle",
+     "args": [
+      {
+       "dialog": "sheet_handle"
+      }
+     ]
+    },
+    {
+     "name": "dialog container centered default",
+     "args": [
+      {
+       "dialog": {
+        "container": [
+         "centered",
+         "default"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered default not_scrollable clipped padded",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "default",
+         "not_scrollable",
+         "clipped",
+         "padded"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered default not_scrollable clipped",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "default",
+         "not_scrollable",
+         "clipped"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered default scrollable clipped padded",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "default",
+         "scrollable",
+         "clipped",
+         "padded"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered default scrollable clipped",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "default",
+         "scrollable",
+         "clipped"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog container centered default sheet",
+     "args": [
+      {
+       "dialog": {
+        "container": [
+         "centered",
+         "default",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered default not_scrollable not_clipped sheet sheet_padded",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "default",
+         "not_scrollable",
+         "not_clipped",
+         "sheet",
+         "sheet_padded"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered default not_scrollable not_clipped sheet",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "default",
+         "not_scrollable",
+         "not_clipped",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered default sheet_scrollable clipped sheet sheet_padded",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "default",
+         "sheet_scrollable",
+         "clipped",
+         "sheet",
+         "sheet_padded"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered default sheet_scrollable clipped sheet",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "default",
+         "sheet_scrollable",
+         "clipped",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog container centered wide",
+     "args": [
+      {
+       "dialog": {
+        "container": [
+         "centered",
+         "wide"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered wide not_scrollable clipped padded",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "wide",
+         "not_scrollable",
+         "clipped",
+         "padded"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered wide not_scrollable clipped",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "wide",
+         "not_scrollable",
+         "clipped"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered wide scrollable clipped padded",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "wide",
+         "scrollable",
+         "clipped",
+         "padded"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered wide scrollable clipped",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "wide",
+         "scrollable",
+         "clipped"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog container centered wide sheet",
+     "args": [
+      {
+       "dialog": {
+        "container": [
+         "centered",
+         "wide",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered wide not_scrollable not_clipped sheet sheet_padded",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "wide",
+         "not_scrollable",
+         "not_clipped",
+         "sheet",
+         "sheet_padded"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered wide not_scrollable not_clipped sheet",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "wide",
+         "not_scrollable",
+         "not_clipped",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered wide sheet_scrollable clipped sheet sheet_padded",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "wide",
+         "sheet_scrollable",
+         "clipped",
+         "sheet",
+         "sheet_padded"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel centered wide sheet_scrollable clipped sheet",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "centered",
+         "wide",
+         "sheet_scrollable",
+         "clipped",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog container bottom default",
+     "args": [
+      {
+       "dialog": {
+        "container": [
+         "bottom",
+         "default"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel bottom default not_scrollable clipped",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "bottom",
+         "default",
+         "not_scrollable",
+         "clipped"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel bottom default scrollable clipped",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "bottom",
+         "default",
+         "scrollable",
+         "clipped"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog container bottom default sheet",
+     "args": [
+      {
+       "dialog": {
+        "container": [
+         "bottom",
+         "default",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel bottom default not_scrollable not_clipped sheet",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "bottom",
+         "default",
+         "not_scrollable",
+         "not_clipped",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel bottom default sheet_scrollable clipped sheet",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "bottom",
+         "default",
+         "sheet_scrollable",
+         "clipped",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog container bottom wide",
+     "args": [
+      {
+       "dialog": {
+        "container": [
+         "bottom",
+         "wide"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel bottom wide not_scrollable clipped",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "bottom",
+         "wide",
+         "not_scrollable",
+         "clipped"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel bottom wide scrollable clipped",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "bottom",
+         "wide",
+         "scrollable",
+         "clipped"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog container bottom wide sheet",
+     "args": [
+      {
+       "dialog": {
+        "container": [
+         "bottom",
+         "wide",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel bottom wide not_scrollable not_clipped sheet",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "bottom",
+         "wide",
+         "not_scrollable",
+         "not_clipped",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "dialog panel bottom wide sheet_scrollable clipped sheet",
+     "args": [
+      {
+       "dialog": {
+        "panel": [
+         "bottom",
+         "wide",
+         "sheet_scrollable",
+         "clipped",
+         "sheet"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "sheet panel",
+     "args": [
+      {
+       "sheet": "panel"
+      }
+     ]
+    },
+    {
+     "name": "sheet overflow default",
+     "args": [
+      {
+       "sheet": {
+        "overflow": "default"
+       }
+      }
+     ]
+    },
+    {
+     "name": "sheet overflow scrollable",
+     "args": [
+      {
+       "sheet": {
+        "overflow": "scrollable"
+       }
+      }
+     ]
+    },
+    {
+     "name": "sheet handle",
+     "args": [
+      {
+       "sheet": "handle"
+      }
+     ]
+    },
+    {
+     "name": "sheet handle_bar",
+     "args": [
+      {
+       "sheet": "handle_bar"
+      }
+     ]
+    },
+    {
+     "name": "swatches page",
+     "args": [
+      {
+       "swatches": "page"
+      }
+     ]
+    },
+    {
+     "name": "swatches tokens",
+     "args": [
+      {
+       "swatches": "tokens"
+      }
+     ]
+    },
+    {
+     "name": "swatches fallback",
+     "args": [
+      {
+       "swatches": "fallback"
+      }
+     ]
+    },
+    {
+     "name": "swatches away",
+     "args": [
+      {
+       "swatches": "away"
+      }
+     ]
+    },
+    {
+     "name": "swatches primary_500",
+     "args": [
+      {
+       "swatches": "primary_500"
+      }
+     ]
+    },
+    {
+     "name": "swatches white",
+     "args": [
+      {
+       "swatches": "white"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "class_names": {
+  "suite": "components",
+  "calls": [
+   {
+    "name": "button user class overrides padding and radius",
+    "parts": [
+     {
+      "yass": [
+       {
+        "btn": [
+         "base",
+         {
+          "md": "base"
+         },
+         {
+          "primary": "solid"
+         }
+        ]
+       }
+      ]
+     },
+     "px-8 rounded-none"
+    ]
+   },
+   {
+    "name": "button user class overrides color",
+    "parts": [
+     {
+      "yass": [
+       {
+        "btn": [
+         "base",
+         {
+          "md": "base"
+         },
+         {
+          "neutral": "soft"
+         }
+        ]
+       }
+      ]
+     },
+     "bg-red-600 text-white"
+    ]
+   },
+   {
+    "name": "unstyled button with no class",
+    "parts": [
+     null,
+     null
+    ]
+   },
+   {
+    "name": "select selected content truncate",
+    "parts": [
+     "truncate",
+     {
+      "yass": [
+       {
+        "select": {
+         "default": "selected"
+        }
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "select menu origin class",
+    "parts": [
+     {
+      "yass": [
+       {
+        "select": {
+         "default": "menu"
+        }
+       }
+      ]
+     },
+     "origin-top-left",
+     null
+    ]
+   },
+   {
+    "name": "select button with host class",
+    "parts": [
+     {
+      "yass": [
+       {
+        "select": {
+         "default": "button"
+        }
+       }
+      ]
+     },
+     "w-64 py-2"
+    ]
+   },
+   {
+    "name": "dialog main on a sheet",
+    "parts": [
+     {
+      "yass": [
+       {
+        "dialog": "main"
+       }
+      ]
+     },
+     "overflow-hidden sm:overflow-y-auto"
+    ]
+   },
+   {
+    "name": "dialog sheet panel",
+    "parts": [
+     {
+      "yass": [
+       {
+        "dialog": {
+         "panel": [
+          "centered",
+          "default",
+          "not_scrollable",
+          "not_clipped",
+          "sheet",
+          "sheet_padded"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "yass": [
+       {
+        "sheet": "panel"
+       }
+      ]
+     },
+     {
+      "yass": [
+       {
+        "sheet": {
+         "overflow": "default"
+        }
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "dialog sheet scrollable panel",
+    "parts": [
+     {
+      "yass": [
+       {
+        "dialog": {
+         "panel": [
+          "centered",
+          "wide",
+          "sheet_scrollable",
+          "clipped",
+          "sheet"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "yass": [
+       {
+        "sheet": "panel"
+       }
+      ]
+     },
+     {
+      "yass": [
+       {
+        "sheet": {
+         "overflow": "scrollable"
+        }
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "dialog sheet handle",
+    "parts": [
+     {
+      "yass": [
+       {
+        "sheet": "handle"
+       }
+      ]
+     },
+     {
+      "yass": [
+       {
+        "dialog": "sheet_handle"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "dialog section with host class",
+    "parts": [
+     {
+      "yass": [
+       {
+        "dialog": "footer"
+       }
+      ]
+     },
+     "sm:flex-row px-2"
+    ]
+   },
+   {
+    "name": "hash class argument keeps truthy keys",
+    "parts": [
+     {
+      "hash": {
+       "p-4": true,
+       "m-2": false,
+       "px-2": true
+      }
+     }
+    ]
+   },
+   {
+    "name": "repeated tokens deduplicated",
+    "parts": [
+     "p-4 p-4",
+     "p-2",
+     "p-4"
+    ]
+   },
+   {
+    "name": "arbitrary values and important",
+    "parts": [
+     "bg-[color:var(--x)] bg-red-500!",
+     "bg-blue-500"
+    ]
+   },
+   {
+    "name": "variant stacking conflicts",
+    "parts": [
+     "dark:hover:bg-gray-800 hover:dark:bg-gray-700",
+     "dark:hover:bg-gray-900"
+    ]
+   },
+   {
+    "name": "outline and ring conflicts",
+    "parts": [
+     "outline-1 -outline-offset-1 outline-gray-300",
+     "outline-2 outline-offset-2 inset-ring inset-ring-gray-300 ring-1"
+    ]
+   },
+   {
+    "name": "size versus w and h",
+    "parts": [
+     "w-4 h-4",
+     "size-6"
+    ]
+   },
+   {
+    "name": "translate and transform none",
+    "parts": [
+     "sm:[transform:none] data-closed:sm:translate-y-0",
+     "sm:translate-y-4"
+    ]
+   }
+  ],
+  "override_tag_helpers": true,
+  "note": "With override_tag_helpers true, a Hash class argument is a yass lookup, as a component that resolves user classes through Classy does."
+ }
+}

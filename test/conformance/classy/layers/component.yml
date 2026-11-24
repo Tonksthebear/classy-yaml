@@ -1,0 +1,6 @@
+# A component file (classy_files): the highest priority.
+card:
+  header: "px-8 py-5"
+widget:
+  base: "relative"
+  icon: "size-5"

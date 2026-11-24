@@ -1,0 +1,612 @@
+{
+  "suites": {
+    "fixture": {
+      "leaf string": {
+        "classes": "p-2 m-2",
+        "warnings": 0
+      },
+      "hash root leaf with base": {
+        "classes": "inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "size with base from parent": {
+        "classes": "py-1.5 text-sm rounded-full px-3 inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "nested list of keys": {
+        "classes": "inline-flex items-center font-semibold rounded-md px-2.5 py-1.5 text-sm bg-indigo-600 text-white",
+        "warnings": 0
+      },
+      "default overrides engine": {
+        "classes": "bg-indigo-600 text-white inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "engine value kept where default has none": {
+        "classes": "bg-primary-50 text-primary-600 inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "extra overrides default and engine base": {
+        "classes": "rounded-xl bg-gray-50 p-6 border-t-2 px-6",
+        "warnings": 0
+      },
+      "hash value gives only its base": {
+        "classes": "rounded-xl bg-gray-50 p-6",
+        "warnings": 0
+      },
+      "component file overrides all": {
+        "classes": "rounded-xl bg-gray-50 p-6 px-8 py-5",
+        "warnings": 0
+      },
+      "component-only key": {
+        "classes": "relative size-5",
+        "warnings": 0
+      },
+      "component files given as a second argument": {
+        "classes": "rounded-xl bg-gray-50 p-6 px-8 py-5",
+        "warnings": 0
+      },
+      "skip_base true": {
+        "classes": "rounded-full px-3 py-1.5 text-sm",
+        "warnings": 0
+      },
+      "skip_base false keeps base": {
+        "classes": "py-1.5 text-sm rounded-full px-3 inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "skip_base in a second hash": {
+        "classes": "rounded-full px-3 py-1.5 text-sm",
+        "warnings": 0
+      },
+      "add string": {
+        "classes": "inline-flex items-center font-semibold mt-4 px-8",
+        "warnings": 0
+      },
+      "add list": {
+        "classes": "rounded-xl bg-gray-50 p-6 border-b px-6 py-4 shadow-sm ring-1",
+        "warnings": 0
+      },
+      "add only": {
+        "classes": "p-1",
+        "warnings": 0
+      },
+      "nested add": {
+        "classes": "rounded-md py-1.5 text-sm inline-flex items-center font-semibold px-9",
+        "warnings": 0
+      },
+      "list leaf flattened": {
+        "classes": "flex flex-col gap-2 text-sm text-gray-900",
+        "warnings": 0
+      },
+      "anchor merge key": {
+        "classes": "block text-gray-700",
+        "warnings": 0
+      },
+      "anchor merge key own key": {
+        "classes": "block mt-2",
+        "warnings": 0
+      },
+      "alias copy": {
+        "classes": "block text-gray-700",
+        "warnings": 0
+      },
+      "deep path base from parent only": {
+        "classes": "deep-base deep-c mid-base top-base",
+        "warnings": 0
+      },
+      "deep parent keys": {
+        "classes": "deep-base mid-base top-base",
+        "warnings": 0
+      },
+      "multiple top-level args": {
+        "classes": "text-lg p-2 m-2 inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "duplicate keys deduplicated": {
+        "classes": "text-lg font-bold",
+        "warnings": 0
+      },
+      "missing key": {
+        "classes": "",
+        "warnings": 0
+      },
+      "missing nested key": {
+        "classes": "inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "empty string leaf": {
+        "classes": "",
+        "warnings": 0
+      },
+      "empty list leaf": {
+        "classes": "",
+        "warnings": 0
+      },
+      "number leaf gives nothing": {
+        "classes": "",
+        "warnings": 0
+      },
+      "boolean leaf gives nothing": {
+        "classes": "",
+        "warnings": 0
+      },
+      "invalid path through a string warns": {
+        "classes": "p-2 m-2",
+        "warnings": 1
+      },
+      "invalid path through a list warns": {
+        "classes": "flex flex-col gap-2 text-sm text-gray-900",
+        "warnings": 1
+      },
+      "invalid deep path": {
+        "classes": "text-lg font-bold",
+        "warnings": 2
+      },
+      "tailwind conflict across layers": {
+        "classes": "rounded-xl bg-gray-50 p-6 border-t-2 px-6",
+        "warnings": 0
+      },
+      "conflict between base and variant": {
+        "classes": "py-1.5 text-sm rounded-full px-3 inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "hash key order changes the output": {
+        "classes": "bg-indigo-600 text-white rounded-md px-2.5 py-1.5 text-sm inline-flex items-center font-semibold",
+        "warnings": 0
+      },
+      "empty call": {
+        "classes": "",
+        "warnings": 0
+      },
+      "empty list arg": {
+        "classes": "",
+        "warnings": 0
+      },
+      "nil segment": {
+        "classes": "",
+        "warnings": 0
+      },
+      "true segment": {
+        "classes": "",
+        "warnings": 0
+      },
+      "integer segment": {
+        "classes": "",
+        "warnings": 0
+      }
+    },
+    "components": {
+      "btn md primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn md primary soft": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-blue-100 text-blue-700 hover:bg-blue-200",
+        "warnings": 0
+      },
+      "btn md primary outline": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm border border-blue-500 text-blue-600 hover:bg-blue-50",
+        "warnings": 0
+      },
+      "btn md primary ghost": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm text-blue-600 hover:bg-blue-100",
+        "warnings": 0
+      },
+      "btn md secondary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-violet-600 text-white shadow-sm hover:bg-violet-700 focus-visible:outline-violet-600",
+        "warnings": 0
+      },
+      "btn md secondary soft": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-violet-100 text-violet-700 hover:bg-violet-200",
+        "warnings": 0
+      },
+      "btn md secondary outline": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm border border-violet-500 text-violet-600 hover:bg-violet-50",
+        "warnings": 0
+      },
+      "btn md secondary ghost": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm text-violet-600 hover:bg-violet-100",
+        "warnings": 0
+      },
+      "btn md neutral solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-white text-zinc-900 shadow-sm ring-1 ring-zinc-300 hover:bg-zinc-50",
+        "warnings": 0
+      },
+      "btn md neutral soft": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100",
+        "warnings": 0
+      },
+      "btn md neutral outline": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm border border-zinc-300 text-zinc-700 hover:bg-zinc-50",
+        "warnings": 0
+      },
+      "btn md neutral ghost": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100",
+        "warnings": 0
+      },
+      "btn md warning solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-amber-500 text-black shadow-sm hover:bg-amber-400 focus-visible:outline-amber-500",
+        "warnings": 0
+      },
+      "btn md warning soft": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-amber-100 text-amber-800 hover:bg-amber-200",
+        "warnings": 0
+      },
+      "btn md warning outline": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm border border-amber-500 text-amber-700 hover:bg-amber-50",
+        "warnings": 0
+      },
+      "btn md warning ghost": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm text-amber-700 hover:bg-amber-100",
+        "warnings": 0
+      },
+      "btn md danger solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-red-600 text-white shadow-sm hover:bg-red-700 focus-visible:outline-red-600",
+        "warnings": 0
+      },
+      "btn md danger soft": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-red-100 text-red-700 hover:bg-red-200",
+        "warnings": 0
+      },
+      "btn md danger outline": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm border border-red-500 text-red-600 hover:bg-red-50",
+        "warnings": 0
+      },
+      "btn md danger ghost": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-100",
+        "warnings": 0
+      },
+      "btn xs base primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded px-2 py-0.5 text-xs bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn xs rounded primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 py-0.5 text-xs rounded-full px-3 bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn xs circular primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 text-xs rounded-full p-0.5 aspect-square bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn sm base primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded px-2.5 py-1 text-sm bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn sm rounded primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 py-1 text-sm rounded-full px-3 bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn sm circular primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 text-sm rounded-full p-1 aspect-square bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn md base primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn md rounded primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 py-2 text-sm rounded-full px-4 bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn md circular primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 text-sm rounded-full p-2 aspect-square bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn lg base primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-4 py-2.5 text-base bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn lg rounded primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 py-2.5 text-base rounded-full px-5 bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn lg circular primary solid": {
+        "classes": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 text-base rounded-full p-2.5 aspect-square bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn xl base primary solid": {
+        "classes": "inline-flex items-center justify-center font-medium disabled:opacity-40 focus-visible:outline-2 rounded-xl px-5 py-3 text-lg gap-3 bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn xl rounded primary solid": {
+        "classes": "inline-flex items-center justify-center font-medium disabled:opacity-40 focus-visible:outline-2 py-3 text-lg gap-3 rounded-full px-6 bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "btn xl circular primary solid": {
+        "classes": "inline-flex items-center justify-center font-medium disabled:opacity-40 focus-visible:outline-2 text-lg gap-3 rounded-full p-3 aspect-square bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600",
+        "warnings": 0
+      },
+      "select container": {
+        "classes": "relative",
+        "warnings": 0
+      },
+      "select group": {
+        "classes": "px-4 py-1 text-xs font-bold uppercase text-zinc-500",
+        "warnings": 0
+      },
+      "select default button": {
+        "classes": "grid w-full grid-cols-1 rounded-lg bg-white py-2.5 pr-3 pl-4 text-left text-zinc-900 outline-1 outline-zinc-300 focus-visible:outline-2 focus-visible:outline-blue-500 aria-invalid:text-red-800 aria-invalid:outline-red-400 dark:bg-zinc-900 dark:text-zinc-100 dark:outline-zinc-700",
+        "warnings": 0
+      },
+      "select default selected": {
+        "classes": "col-start-1 row-start-1 pr-8 text-ellipsis",
+        "warnings": 0
+      },
+      "select default icon": {
+        "classes": "col-start-1 row-start-1 size-4 self-center justify-self-end text-zinc-400 aria-invalid:text-red-500",
+        "warnings": 0
+      },
+      "select default menu": {
+        "classes": "max-h-72 w-full overflow-y-auto rounded-lg bg-white py-2 shadow-md ring-1 ring-black/10 origin-top",
+        "warnings": 0
+      },
+      "select default option label": {
+        "classes": "block truncate group-aria-selected:font-bold",
+        "warnings": 0
+      },
+      "select default option container": {
+        "classes": "relative cursor-pointer py-2 pr-10 pl-4 select-none focus:bg-blue-600 focus:text-white",
+        "warnings": 0
+      },
+      "select default option check": {
+        "classes": "absolute inset-y-0 right-0 flex items-center pr-3 text-blue-600",
+        "warnings": 0
+      },
+      "select primary button": {
+        "classes": "grid w-full grid-cols-1 rounded-lg bg-blue-50 py-2.5 pr-3 pl-4 text-left text-blue-900 outline-1 outline-blue-300 focus-visible:outline-2 focus-visible:outline-blue-600 aria-invalid:bg-white aria-invalid:text-red-800 aria-invalid:outline-red-400",
+        "warnings": 0
+      },
+      "select primary selected": {
+        "classes": "col-start-1 row-start-1 pr-8 text-ellipsis",
+        "warnings": 0
+      },
+      "select primary icon": {
+        "classes": "col-start-1 row-start-1 size-4 self-center justify-self-end text-blue-400 aria-invalid:text-red-500",
+        "warnings": 0
+      },
+      "select primary menu": {
+        "classes": "max-h-72 w-full overflow-y-auto rounded-lg bg-blue-50 py-2 shadow-md ring-1 ring-blue-900/10 origin-top",
+        "warnings": 0
+      },
+      "select primary option label": {
+        "classes": "block truncate group-aria-selected:font-bold",
+        "warnings": 0
+      },
+      "select primary option container": {
+        "classes": "relative cursor-pointer py-2 pr-10 pl-4 select-none focus:bg-blue-700 focus:text-white",
+        "warnings": 0
+      },
+      "select primary option check": {
+        "classes": "absolute inset-y-0 right-0 flex items-center pr-3 text-blue-700",
+        "warnings": 0
+      },
+      "dialog main": {
+        "classes": "fixed inset-0 z-50 overflow-y-auto bg-transparent p-0",
+        "warnings": 0
+      },
+      "dialog backdrop": {
+        "classes": "fixed inset-0 bg-black/40 transition-opacity duration-200 data-closed:opacity-0",
+        "warnings": 0
+      },
+      "dialog title": {
+        "classes": "text-lg font-bold text-zinc-900 dark:text-zinc-50",
+        "warnings": 0
+      },
+      "dialog description": {
+        "classes": "text-sm text-zinc-600 dark:text-zinc-300",
+        "warnings": 0
+      },
+      "dialog dismiss": {
+        "classes": "rounded-full p-1 text-zinc-500 hover:text-zinc-700 focus:outline-2 focus:outline-blue-500",
+        "warnings": 0
+      },
+      "dialog header": {
+        "classes": "shrink-0 border-b border-zinc-200 px-5 py-3 sm:px-8",
+        "warnings": 0
+      },
+      "dialog body": {
+        "classes": "flex-1 overflow-y-auto px-5 py-3 sm:px-8",
+        "warnings": 0
+      },
+      "dialog footer": {
+        "classes": "shrink-0 border-t border-zinc-200 px-5 py-3 sm:flex sm:flex-row-reverse sm:gap-3 sm:px-8",
+        "warnings": 0
+      },
+      "dialog sheet_handle": {
+        "classes": "md:hidden",
+        "warnings": 0
+      },
+      "dialog container centered default": {
+        "classes": "flex min-h-full items-end justify-center p-6 text-center sm:p-2 sm:items-center sm:justify-center",
+        "warnings": 0
+      },
+      "dialog panel centered default not_scrollable clipped padded": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:translate-y-2 data-closed:sm:scale-90 overflow-clip px-5 py-6 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered default not_scrollable clipped": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:translate-y-2 data-closed:sm:scale-90 overflow-clip",
+        "warnings": 0
+      },
+      "dialog panel centered default scrollable clipped padded": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:translate-y-2 data-closed:sm:scale-90 flex flex-col h-[90dvh] sm:h-auto sm:max-h-[80dvh] overflow-clip px-5 py-6 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered default scrollable clipped": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:translate-y-2 data-closed:sm:scale-90 flex flex-col h-[90dvh] sm:h-auto sm:max-h-[80dvh] overflow-clip",
+        "warnings": 0
+      },
+      "dialog container centered default sheet": {
+        "classes": "flex min-h-full items-end justify-center text-center sm:items-center sm:justify-center max-sm:items-end p-0 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered default not_scrollable not_clipped sheet sheet_padded": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:translate-y-2 data-closed:sm:scale-90 p-0 sm:rounded-xl sm:[transform:none] data-closed:sm:translate-y-0 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered default not_scrollable not_clipped sheet": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:translate-y-2 data-closed:sm:scale-90 p-0 sm:rounded-xl sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0",
+        "warnings": 0
+      },
+      "dialog panel centered default sheet_scrollable clipped sheet sheet_padded": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:translate-y-2 data-closed:sm:scale-90 flex flex-col sm:h-auto sm:max-h-[80dvh] overflow-clip p-0 sm:rounded-xl sm:[transform:none] data-closed:sm:translate-y-0 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered default sheet_scrollable clipped sheet": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:translate-y-2 data-closed:sm:scale-90 flex flex-col sm:h-auto sm:max-h-[80dvh] overflow-clip p-0 sm:rounded-xl sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0",
+        "warnings": 0
+      },
+      "dialog container centered wide": {
+        "classes": "flex min-h-full justify-center p-6 text-center sm:p-2 sm:items-center sm:justify-center items-stretch sm:px-10 lg:px-12",
+        "warnings": 0
+      },
+      "dialog panel centered wide not_scrollable clipped padded": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-2 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 overflow-clip px-5 py-6 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered wide not_scrollable clipped": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-2 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 overflow-clip",
+        "warnings": 0
+      },
+      "dialog panel centered wide scrollable clipped padded": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-2 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 flex-col h-[90dvh] sm:h-auto sm:max-h-[80dvh] overflow-clip px-5 py-6 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered wide scrollable clipped": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-2 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 flex-col h-[90dvh] sm:h-auto sm:max-h-[80dvh] overflow-clip",
+        "warnings": 0
+      },
+      "dialog container centered wide sheet": {
+        "classes": "flex min-h-full justify-center text-center sm:items-center sm:justify-center items-stretch lg:px-12 max-sm:items-end p-0 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered wide not_scrollable not_clipped sheet sheet_padded": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-2 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 p-0 sm:[transform:none] data-closed:sm:translate-y-0 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered wide not_scrollable not_clipped sheet": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-2 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 p-0 sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0",
+        "warnings": 0
+      },
+      "dialog panel centered wide sheet_scrollable clipped sheet sheet_padded": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-2 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 flex-col sm:h-auto sm:max-h-[80dvh] overflow-clip p-0 sm:[transform:none] data-closed:sm:translate-y-0 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel centered wide sheet_scrollable clipped sheet": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-2 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 flex-col sm:h-auto sm:max-h-[80dvh] overflow-clip p-0 sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0",
+        "warnings": 0
+      },
+      "dialog container bottom default": {
+        "classes": "flex min-h-full items-end justify-center p-6 text-center sm:p-2 sm:items-end overflow-clip",
+        "warnings": 0
+      },
+      "dialog panel bottom default not_scrollable clipped": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 rounded-b-none data-closed:translate-y-8 overflow-clip",
+        "warnings": 0
+      },
+      "dialog panel bottom default scrollable clipped": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 rounded-b-none data-closed:translate-y-8 flex flex-col h-[90dvh] sm:h-auto sm:max-h-[80dvh] overflow-clip",
+        "warnings": 0
+      },
+      "dialog container bottom default sheet": {
+        "classes": "flex min-h-full items-end justify-center text-center sm:items-end overflow-clip max-sm:items-end p-0 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel bottom default not_scrollable not_clipped sheet": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 rounded-b-none data-closed:translate-y-8 p-0 sm:my-10 sm:rounded-xl sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0",
+        "warnings": 0
+      },
+      "dialog panel bottom default sheet_scrollable clipped sheet": {
+        "classes": "relative rounded-xl bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 rounded-b-none data-closed:translate-y-8 flex flex-col sm:h-auto sm:max-h-[80dvh] overflow-clip p-0 sm:my-10 sm:rounded-xl sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0",
+        "warnings": 0
+      },
+      "dialog container bottom wide": {
+        "classes": "flex min-h-full justify-center p-6 text-center sm:p-2 sm:items-end overflow-clip items-stretch sm:px-10 lg:px-12",
+        "warnings": 0
+      },
+      "dialog panel bottom wide not_scrollable clipped": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-8 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 overflow-clip",
+        "warnings": 0
+      },
+      "dialog panel bottom wide scrollable clipped": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-8 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 flex-col h-[90dvh] sm:h-auto sm:max-h-[80dvh] overflow-clip",
+        "warnings": 0
+      },
+      "dialog container bottom wide sheet": {
+        "classes": "flex min-h-full justify-center text-center sm:items-end overflow-clip items-stretch lg:px-12 max-sm:items-end p-0 sm:p-8",
+        "warnings": 0
+      },
+      "dialog panel bottom wide not_scrollable not_clipped sheet": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-8 flex rounded-none sm:rounded-xl sm:max-w-2xl data-closed:scale-110 p-0 sm:my-10 sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0",
+        "warnings": 0
+      },
+      "dialog panel bottom wide sheet_scrollable clipped sheet": {
+        "classes": "relative bg-white text-left shadow-lg transition-all duration-200 data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:translate-y-8 flex rounded-none sm:rounded-xl sm:max-w-2xl data-closed:scale-110 flex-col sm:h-auto sm:max-h-[80dvh] overflow-clip p-0 sm:my-10 sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0",
+        "warnings": 0
+      },
+      "sheet panel": {
+        "classes": "relative flex w-full flex-col rounded-t-3xl bg-white shadow-2xl [transform:translateY(var(--drag-y,0px))] transition-transform duration-300 data-closed:translate-y-full dark:bg-zinc-900",
+        "warnings": 0
+      },
+      "sheet overflow default": {
+        "classes": "overflow-x-clip overflow-y-scroll",
+        "warnings": 0
+      },
+      "sheet overflow scrollable": {
+        "classes": "overflow-auto",
+        "warnings": 0
+      },
+      "sheet handle": {
+        "classes": "sticky top-0 flex md:flex h-10 items-center justify-center bg-white",
+        "warnings": 0
+      },
+      "sheet handle_bar": {
+        "classes": "h-1.5 w-10 rounded-full bg-zinc-300",
+        "warnings": 0
+      },
+      "swatches page": {
+        "classes": "flex flex-col gap-4 p-6",
+        "warnings": 0
+      },
+      "swatches tokens": {
+        "classes": "flex flex-wrap gap-2",
+        "warnings": 0
+      },
+      "swatches fallback": {
+        "classes": "flex flex-wrap gap-2 [--btn-bg:initial] [--btn-fg:initial] [--btn-hover:initial]",
+        "warnings": 0
+      },
+      "swatches away": {
+        "classes": "h-32 w-full",
+        "warnings": 0
+      },
+      "swatches primary_500": {
+        "classes": "bg-blue-500",
+        "warnings": 0
+      },
+      "swatches white": {
+        "classes": "bg-neutral-50",
+        "warnings": 0
+      }
+    }
+  },
+  "class_names": {
+    "button user class overrides padding and radius": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 py-2 text-sm bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus-visible:outline-blue-600 px-8 rounded-none",
+    "button user class overrides color": "inline-flex items-center justify-center gap-2 font-medium disabled:opacity-40 focus-visible:outline-2 rounded-lg px-3 py-2 text-sm hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 bg-red-600 text-white",
+    "unstyled button with no class": "",
+    "select selected content truncate": "col-start-1 row-start-1 pr-8 text-ellipsis",
+    "select menu origin class": "max-h-72 w-full overflow-y-auto rounded-lg bg-white py-2 shadow-md ring-1 ring-black/10 origin-top-left",
+    "select button with host class": "grid grid-cols-1 rounded-lg bg-white pr-3 pl-4 text-left text-zinc-900 outline-1 outline-zinc-300 focus-visible:outline-2 focus-visible:outline-blue-500 aria-invalid:text-red-800 aria-invalid:outline-red-400 dark:bg-zinc-900 dark:text-zinc-100 dark:outline-zinc-700 w-64 py-2",
+    "dialog main on a sheet": "fixed inset-0 z-50 bg-transparent p-0 overflow-hidden sm:overflow-y-auto",
+    "dialog sheet panel": "relative rounded-xl bg-white text-left data-closed:opacity-0 sm:w-full sm:max-w-md dark:bg-zinc-900 sm:my-10 data-closed:sm:scale-90 p-0 sm:rounded-xl sm:[transform:none] data-closed:sm:translate-y-0 sm:p-8 flex w-full flex-col rounded-t-3xl shadow-2xl [transform:translateY(var(--drag-y,0px))] transition-transform duration-300 data-closed:translate-y-full overflow-x-clip overflow-y-scroll",
+    "dialog sheet scrollable panel": "relative bg-white text-left data-closed:opacity-0 sm:w-full dark:bg-zinc-900 data-closed:sm:scale-90 flex rounded-none sm:rounded-xl sm:my-12 sm:max-w-2xl data-closed:scale-110 flex-col sm:h-auto sm:max-h-[80dvh] p-0 sm:pb-0 sm:[transform:none] data-closed:sm:translate-y-0 w-full rounded-t-3xl shadow-2xl [transform:translateY(var(--drag-y,0px))] transition-transform duration-300 data-closed:translate-y-full overflow-auto",
+    "dialog sheet handle": "sticky top-0 flex h-10 items-center justify-center bg-white md:hidden",
+    "dialog section with host class": "shrink-0 border-t border-zinc-200 py-3 sm:flex sm:gap-3 sm:px-8 sm:flex-row px-2",
+    "hash class argument keeps truthy keys": "",
+    "repeated tokens deduplicated": "p-2",
+    "arbitrary values and important": "bg-red-500! bg-blue-500",
+    "variant stacking conflicts": "dark:hover:bg-gray-900",
+    "outline and ring conflicts": "outline-gray-300 outline-2 outline-offset-2 inset-ring inset-ring-gray-300 ring-1",
+    "size versus w and h": "size-6",
+    "translate and transform none": "sm:[transform:none] data-closed:sm:translate-y-0 sm:translate-y-4"
+  }
+}

@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Runs one command of the gem's pool job (.pool.toml) on a compute-pool node, for example:
+#
+#   jobq run --needs linux --dirty -- bin/pool-job bundle exec rake test
+#   jobq run --needs linux --dirty -- bin/pool-job php test/conformance/classy/run.php
+#
+# From .pool.toml: TMPDIR, BUNDLE_PATH (a cache shared by the gem's jobs on a node) and CI.
+#
+# In order: the gems, PHP and composer.phar (each downloaded once into the cache), the Composer
+# packages, then the command with php on PATH. Each install runs under a lock. The container ends
+# with the job.
+set -euo pipefail
+
+PHP_VERSION=8.4.15
+COMPOSER_VERSION=2.11.3
+
+(( $# )) || { echo "usage: bin/pool-job <command and args...>" >&2; exit 64; }
+[ -n "${BUNDLE_PATH:-}" ] || { echo "pool-job: BUNDLE_PATH is not set (.pool.toml environment)" >&2; exit 64; }
+# A private (0700) directory inside the TMPDIR of .pool.toml: Ruby's Dir.tmpdir skips a world-writable
+# directory without the sticky bit.
+TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/classy-yaml.XXXXXX")
+export TMPDIR
+
+# 1. The gems.
+flock "$BUNDLE_PATH/.install.lock" sh -c 'bundle check > /dev/null || bundle install --quiet'
+
+# 2. PHP (a static build from static-php.dev) and composer.phar, in directories named with their versions.
+cache="$BUNDLE_PATH/php"
+php_dir="$cache/php-$PHP_VERSION"
+composer="$cache/composer-$COMPOSER_VERSION/composer.phar"
+mkdir -p "$cache"
+(
+  flock 9
+  if [ ! -x "$php_dir/php" ]; then
+    archive="https://dl.static-php.dev/static-php-cli/common/php-$PHP_VERSION-cli-linux-$(uname -m).tar.gz"
+    echo "pool-job: downloading $archive"
+    rm -rf "$php_dir.partial" && mkdir -p "$php_dir.partial"
+    curl -fsSL "$archive" | tar xz -C "$php_dir.partial"
+    mv "$php_dir.partial" "$php_dir"
+  fi
+  if [ ! -f "$composer" ]; then
+    echo "pool-job: downloading composer $COMPOSER_VERSION"
+    mkdir -p "$(dirname "$composer")"
+    curl -fsSL -o "$composer.partial" "https://getcomposer.org/download/$COMPOSER_VERSION/composer.phar"
+    mv "$composer.partial" "$composer"
+  fi
+) 9> "$cache/.download.lock"
+export PATH="$php_dir:$PATH"
+
+# 3. The Composer packages of composer.lock. The download cache is shared; vendor/ is the job's own.
+export COMPOSER_CACHE_DIR="$cache/composer-cache" COMPOSER_HOME="$cache/composer-home" COMPOSER_NO_INTERACTION=1
+flock "$cache/.composer.lock" php "$composer" install --no-progress --prefer-dist --quiet
+
+echo "pool-job: $* | $(php -r 'echo "PHP ", PHP_VERSION;') | $(ruby -e 'print "Ruby ", RUBY_VERSION')"
+exec "$@"

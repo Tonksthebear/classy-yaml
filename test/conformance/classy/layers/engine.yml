@@ -1,0 +1,35 @@
+# Lowest priority layer (an engine file, as a gem engine's YAML file is for a host).
+btn:
+  base: "inline-flex items-center font-semibold"
+  md:
+    base: "rounded-md px-2.5 py-1.5 text-sm"
+    rounded: "rounded-full px-3 py-1.5 text-sm"
+  primary:
+    solid: "bg-primary-600 text-white hover:bg-primary-500"
+    soft: "bg-primary-50 text-primary-600"
+card:
+  base: "rounded-lg bg-white p-4"
+  header: "border-b px-4 py-3"
+  footer: "border-t px-4 py-3"
+list:
+  - "flex flex-col gap-2"
+  - ["text-sm", ["text-gray-900"]]
+shared: &shared
+  base: "block"
+  tone: "text-gray-700"
+merged:
+  <<: *shared
+  extra: "mt-2"
+alias_copy: *shared
+string_root: "p-2 m-2"
+empty: ""
+blank_list: []
+number_leaf: 12
+bool_leaf: true
+nested:
+  a:
+    b:
+      c: "deep-c"
+      base: "deep-base"
+    base: "mid-base"
+  base: "top-base"

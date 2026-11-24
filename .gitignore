@@ -14,3 +14,4 @@ dip.yml
 .byebug_history
 .idea/**
 **/**.DS_Store
+/vendor/

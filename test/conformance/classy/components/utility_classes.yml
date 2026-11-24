@@ -1,0 +1,9 @@
+# The default file of the "components" suite (a host's config/utility_classes.yml): made-up page classes.
+swatches:
+  page: "flex flex-col gap-4 p-6"
+  tokens: "flex flex-wrap gap-2"
+  # Sets the button color variables to initial, so the buttons use their fallback colors.
+  fallback: "flex flex-wrap gap-2 [--btn-bg:initial] [--btn-fg:initial] [--btn-hover:initial]"
+  away: "h-32 w-full"
+  primary_500: "bg-blue-500"
+  white: "bg-neutral-50"

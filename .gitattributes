@@ -1,0 +1,24 @@
+# The Composer package (git archive, and the Packagist zipball) holds only composer.json, php/,
+# README.md and MIT-LICENSE. Bundler installs the gem from git or from the .gem file, so these
+# lines do not change the gem.
+/.claude export-ignore
+/.cursor export-ignore
+/.github export-ignore
+/bench export-ignore
+/bin export-ignore
+/gemfiles export-ignore
+/lib export-ignore
+/memory-bank export-ignore
+/test export-ignore
+/Appraisals export-ignore
+/Gemfile export-ignore
+/Gemfile.lock export-ignore
+/Rakefile export-ignore
+*.gemspec export-ignore
+*.gem export-ignore
+/.rubocop.yml export-ignore
+/mise.toml export-ignore
+/.pool.toml export-ignore
+/composer.lock export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore

@@ -1,0 +1,24 @@
+{
+    "name": "tonksthebear/classy-yaml",
+    "description": "Classy YAML for PHP: look up CSS utility classes by key from layered YAML files, with Tailwind class merging. A port of the classy-yaml Ruby gem.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "symfony/yaml": "^7.0|^8.0",
+        "tales-from-a-dev/tailwind-merge-php": "^0.5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tonksthebear\\ClassyYaml\\": "php/src/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.4.15"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
